@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _widgetOptions = <Widget>[
     Text('Home Page'),
-    ClickableList(),
+    MyListScreen(),
     SettingsPage()
   ];
 
