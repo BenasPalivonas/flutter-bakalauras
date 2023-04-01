@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui/settings.dart';
 
+import 'calendar.dart';
 import 'list.dart';
 
 class MyApp extends StatelessWidget {
@@ -25,7 +26,8 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _widgetOptions = <Widget>[
     Text('Home Page'),
     MyListScreen(),
-    SettingsPage()
+    Calendar(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -75,11 +77,20 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Nustatymai'),
+              leading: Icon(Icons.message),
+              title: Text('Kalendorius'),
               selected: _selectedIndex == 2,
               onTap: () {
                 _onItemTapped(2);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Nustatymai'),
+              selected: _selectedIndex == 3,
+              onTap: () {
+                _onItemTapped(3);
                 Navigator.pop(context);
               },
             ),

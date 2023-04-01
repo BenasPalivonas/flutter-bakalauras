@@ -158,8 +158,6 @@ class _TodoListState extends State<ClickableList> {
   }
 
   void _showDetails(Item item) {
-    print(_completed);
-    print(this._completed);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -257,10 +255,10 @@ class _TodoListState extends State<ClickableList> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }
