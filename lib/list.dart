@@ -170,13 +170,14 @@ class _TodoListState extends State<ClickableList> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Name: ${item.name}'),
+              Text('${translate('modal.name')} ${item.name}'),
               SizedBox(height: 8),
-              Text('Subject: ${item.subject}'),
+              Text('${translate('modal.subject')} ${item.subject}'),
               SizedBox(height: 8),
-              Text('Date: ${item.date}'),
+              Text(
+                  '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
               SizedBox(height: 16),
-              Text('Additional Details:',
+              Text('${translate('modal.additional_details')}',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Text(item.details),
             ],
@@ -223,7 +224,9 @@ class _TodoListState extends State<ClickableList> {
                     .map((item) {
                   return ListTile(
                     title: Text(item.name),
-                    subtitle: Text('${item.subject} - ${item.date}'),
+                    subtitle: Text(
+                        '${item.subject} - ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
+                    textColor: Colors.black,
                     onTap: () {
                       _showDetails(item);
                     },
@@ -258,10 +261,10 @@ class _TodoListState extends State<ClickableList> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Icon(Icons.add),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

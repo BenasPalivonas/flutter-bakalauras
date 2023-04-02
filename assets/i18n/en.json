@@ -52,5 +52,11 @@
     },
     "current_locale": {
         "locale": "en"
+    },
+    "modal": {
+        "name": "Name:",
+        "subject": "Subject:",
+        "date": "Date:",
+        "additional_details": "Additional Details:"
     }
 }

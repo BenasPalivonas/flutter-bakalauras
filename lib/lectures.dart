@@ -153,6 +153,7 @@ Widget _buildLectureList(List<Lecture> lectures) {
                 trailing: Text(DateFormat('HH:mm').format(lecture.time)),
                 subtitle: Text(
                     "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lectrurer}"),
+                textColor: Colors.black,
               );
             },
           ),

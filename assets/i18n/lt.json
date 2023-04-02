@@ -52,5 +52,11 @@
     },
     "current_locale": {
         "locale": "lt"
+    },
+    "modal": {
+        "name": "Pavadinimas:",
+        "subject": "Dalykas:",
+        "date": "Data:",
+        "additional_details": "Papildoma informacija:"
     }
 }
