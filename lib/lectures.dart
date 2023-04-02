@@ -1,37 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class Lecture {
   final String subject;
   final DateTime time;
   final String venue;
+  final String lectrurer;
 
-  Lecture({required this.subject, required this.time, required this.venue});
+  Lecture(
+      {required this.subject,
+      required this.time,
+      required this.venue,
+      required this.lectrurer});
 }
 
 List<Lecture> lectures = [
   Lecture(
-      subject: "Mathematics",
+      subject: "Matematika",
       time: DateTime(2023, 4, 2, 10, 0),
-      venue: "Room 101"),
+      venue: "101",
+      lectrurer: "Vardenis Pavardenis"),
   Lecture(
-      subject: "Computer Science",
+      subject: "Matematika2",
+      time: DateTime(2023, 4, 1, 10, 0),
+      venue: "101",
+      lectrurer: "Vardenis Pavardenis"),
+  Lecture(
+      subject: "Duomenų gavyba",
       time: DateTime(2023, 4, 2, 14, 0),
-      venue: "Room 202"),
+      venue: "202",
+      lectrurer: "Vardenis Pavardenis"),
   Lecture(
-      subject: "English", time: DateTime(2023, 4, 3, 9, 0), venue: "Room 303"),
+      subject: "Anglų kalba",
+      time: DateTime(2023, 4, 3, 9, 0),
+      venue: "303",
+      lectrurer: "Vardenis Pavardenis"),
   Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
+      subject: "Istorija",
+      time: DateTime(2023, 4, 4, 16, 0),
+      venue: "404",
+      lectrurer: "Vardenis Pavardenis"),
   Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
-  Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
-  Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
-  Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
-  Lecture(
-      subject: "History", time: DateTime(2023, 4, 4, 16, 0), venue: "Room 404"),
+      subject: "Istorija",
+      time: DateTime(2023, 4, 5, 16, 0),
+      venue: "404",
+      lectrurer: "Vardenis Pavardenis"),
 ];
 
 List<Lecture> _todayLectures = [];
@@ -49,7 +64,6 @@ class _LecturePageState extends State<LecturePage> {
   @override
   void initState() {
     super.initState();
-
     // Filter the lectures by today, tomorrow, and all week
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
@@ -76,12 +90,12 @@ class _LecturePageState extends State<LecturePage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Paskaitos"),
+          title: Text(translate('lectures_tabs.title')),
           bottom: TabBar(
             tabs: [
-              Tab(text: "Today"),
-              Tab(text: "Tomorrow"),
-              Tab(text: "All Week"),
+              Tab(text: translate("lectures_tabs.today")),
+              Tab(text: translate("lectures_tabs.tomorrow")),
+              Tab(text: translate("lectures_tabs.all_week")),
             ],
           ),
         ),
@@ -120,7 +134,7 @@ Widget _buildLectureList(List<Lecture> lectures) {
           Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              ReturnDayInLithuanian(dayOfWeek),
+              translate("weekDay.${dayOfWeek}"),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -135,9 +149,10 @@ Widget _buildLectureList(List<Lecture> lectures) {
             itemBuilder: (context, index) {
               Lecture lecture = dayLectures[index];
               return ListTile(
-                title: Text(lecture.subject),
-                subtitle:
-                    Text("Time: ${lecture.time} - Venue: ${lecture.venue}"),
+                title: Text("${lecture.subject.tr}"),
+                trailing: Text(DateFormat('HH:mm').format(lecture.time)),
+                subtitle: Text(
+                    "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lectrurer}"),
               );
             },
           ),
@@ -145,30 +160,4 @@ Widget _buildLectureList(List<Lecture> lectures) {
       );
     },
   );
-}
-
-String ReturnDayInLithuanian(String dayOfTheWeek) {
-  if (dayOfTheWeek == "Monday") {
-    return "Pirmadienis";
-  }
-  if (dayOfTheWeek == "Tuesday") {
-    return "Antradienis";
-  }
-  if (dayOfTheWeek == "Wednesday") {
-    return "Trečiadienis";
-  }
-  if (dayOfTheWeek == "Thursday") {
-    return "Ketvirtadienis";
-  }
-  if (dayOfTheWeek == "Friday") {
-    return "Penktadienis";
-  }
-  if (dayOfTheWeek == "Saturday") {
-    return "Šeštadienis";
-  }
-  if (dayOfTheWeek == "Sunday") {
-    return "Sekmadienis";
-  }
-
-  return "";
 }

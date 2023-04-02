@@ -1,0 +1,53 @@
+{
+    "app_bar": {
+        "settings_title": "Settings"
+    },
+    "button": {
+        "cancel": "Cancel",
+        "change_language": "Change Language"
+    },
+    "language": {
+        "name": {
+            "en": "English",
+            "lt": "Lithuanian"
+        },
+        "selected_message": "Currently selected language is {language}",
+        "selection": {
+            "message": "Please select a language from the list",
+            "title": "Language Selection"
+        }
+    },
+    "tabs": {
+        "home": "Home",
+        "lectures": "Lectures",
+        "assignments": "Assignments",
+        "calendar": "Calendar",
+        "settings": "Settings"
+    },
+    "weekDay": {
+        "Monday": "Monday",
+        "Tuesday": "Tuesday",
+        "Wednesday": "Wednesday",
+        "Thursday": "Thursday",
+        "Friday": "Friday",
+        "Saturday": "Saturday",
+        "Sunday": "Sunday"
+    },
+    "lectures_tabs": {
+        "title": "Lectures",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "all_week": "All week"
+    },
+    "subtitles": {
+        "venue": "Venue",
+        "lecturer": "Lecturer"
+    },
+    "assignments": {
+        "title": "Assignments",
+        "not_completed": "Not completed",
+        "completed": "Completed",
+        "mark_as_not_completed": "Mark as not completed",
+        "mark_as_completed": "Mark as completed"
+    }
+}

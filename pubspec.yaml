@@ -37,6 +37,9 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   table_calendar: ^3.0.0
   flutter_event_calendar: ^1.0.0
+  get: ^4.6.5
+  flutter_translate: ^4.0.3
+  flutter_localization: ^0.1.10
 
 
 dev_dependencies:
@@ -62,7 +65,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #assets:
+  assets:
+    - assets/i18n/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

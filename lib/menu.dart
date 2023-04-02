@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:ui/settings.dart';
 
 import 'calendar.dart';
 import 'lectures.dart';
 import 'list.dart';
+import 'package:get/get.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blue,
               ),
               child: Text(
-                'Menu',
+                'Meniu',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('Namai'),
+              title: Text(translate('tabs.home')),
               selected: _selectedIndex == 0,
               onTap: () {
                 _onItemTapped(0);
@@ -69,7 +71,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('Tvarkarastis'),
+              title: Text(translate('tabs.lectures')),
               selected: _selectedIndex == 1,
               onTap: () {
                 _onItemTapped(1);
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text('Atsiskaitymai'),
+              title: Text(translate('tabs.assignments')),
               selected: _selectedIndex == 2,
               onTap: () {
                 _onItemTapped(2);
@@ -87,7 +89,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text('Kalendorius'),
+              title: Text(translate('tabs.calendar')),
               selected: _selectedIndex == 3,
               onTap: () {
                 _onItemTapped(3);
@@ -96,7 +98,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text('Nustatymai'),
+              title: Text(translate('tabs.settings')),
               selected: _selectedIndex == 4,
               onTap: () {
                 _onItemTapped(4);

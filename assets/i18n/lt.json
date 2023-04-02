@@ -1,0 +1,53 @@
+{
+    "app_bar": {
+        "settings_title": "Nustatymai"
+    },
+    "button": {
+        "cancel": "Atšaukti",
+        "change_language": "Pakeisti kalbą"
+    },
+    "language": {
+        "name": {
+            "en": "Anglų",
+            "lt": "Lietuvių"
+        },
+        "selected_message": "Šiuo metu pasirinkta kalba yra {language}",
+        "selection": {
+            "message": "Prašome pasirinkti kalbą iš sarašo",
+            "title": "Kalbos pasirinkimas"
+        }
+    },
+    "tabs": {
+        "home": "Namai",
+        "lectures": "Tvarkaraštis",
+        "assignments": "Atsiskaitymai",
+        "calendar": "Kalendorius",
+        "settings": "Nustatymai"
+    },
+    "weekDay": {
+        "pirmadienis": "Pirmadienis",
+        "antradienis": "Antradienis",
+        "trečiadienis": "Trečiadienis",
+        "ketvirtadienis": "Ketvirtadienis",
+        "penktadienis": "Penktadienis",
+        "šeštadienis": "Šeštadienis",
+        "sekmadienis": "Sekmadienis"
+    },
+    "lectures_tabs": {
+        "title": "Paskaitos",
+        "today": "Šiandiena",
+        "tomorrow": "Rytoj",
+        "all_week": "Visa savaitė"
+    },
+    "subtitles": {
+        "venue": "Auditorija",
+        "lecturer": "Dėstytojas"
+    },
+    "assignments": {
+        "title": "Atsiskaitymai",
+        "not_completed": "Neatsiskaityti",
+        "completed": "Atsiskaityti",
+        "mark_as_not_completed": "Pažymėti kaip ne atsiskaitytą",
+        "mark_as_completed": "Pažymėti kaip atsiskaitytą"
+    }
+}

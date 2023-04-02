@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:intl/intl.dart';
 
 class Item {
@@ -94,7 +95,7 @@ class _MyListScreenState extends State<MyListScreen> {
       initialIndex: _currentIndex,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Atsiskaitymai'),
+          title: Text(translate('assignments.title')),
         ),
         body: Column(
           children: [
@@ -106,10 +107,10 @@ class _MyListScreenState extends State<MyListScreen> {
               },
               tabs: [
                 Tab(
-                  text: 'Not Completed',
+                  text: translate('assignments.not_completed'),
                 ),
                 Tab(
-                  text: 'Completed',
+                  text: translate('assignments.completed'),
                 ),
               ],
               dividerColor: Colors.blue,
@@ -231,8 +232,8 @@ class _TodoListState extends State<ClickableList> {
                         return [
                           PopupMenuItem(
                             child: Text(item.completed
-                                ? 'Mark as Not Completed'
-                                : 'Mark as Completed'),
+                                ? translate('assignments.mark_as_not_completed')
+                                : translate('assignments.mark_as_completed')),
                             value: 'complete',
                           ),
                           // PopupMenuItem(
