@@ -93,7 +93,9 @@ class _MyListScreenState extends State<MyListScreen> {
       length: 2,
       initialIndex: _currentIndex,
       child: Scaffold(
-        appBar: null,
+        appBar: AppBar(
+          title: Text('Atsiskaitymai'),
+        ),
         body: Column(
           children: [
             TabBar(

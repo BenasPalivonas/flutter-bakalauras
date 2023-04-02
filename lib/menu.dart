@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ui/settings.dart';
 
 import 'calendar.dart';
+import 'lectures.dart';
 import 'list.dart';
 
 class MyApp extends StatelessWidget {
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _widgetOptions = <Widget>[
     Text('Home Page'),
+    LecturePage(),
     MyListScreen(),
     Calendar(),
     SettingsPage(),
@@ -39,9 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Side Menu'),
-      ),
+      appBar: AppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Atsiskaitymai'),
+              leading: Icon(Icons.home),
+              title: Text('Tvarkarastis'),
               selected: _selectedIndex == 1,
               onTap: () {
                 _onItemTapped(1);
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text('Kalendorius'),
+              title: Text('Atsiskaitymai'),
               selected: _selectedIndex == 2,
               onTap: () {
                 _onItemTapped(2);
@@ -86,11 +86,20 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Nustatymai'),
+              leading: Icon(Icons.message),
+              title: Text('Kalendorius'),
               selected: _selectedIndex == 3,
               onTap: () {
                 _onItemTapped(3);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Nustatymai'),
+              selected: _selectedIndex == 4,
+              onTap: () {
+                _onItemTapped(4);
                 Navigator.pop(context);
               },
             ),
