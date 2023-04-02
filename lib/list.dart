@@ -152,12 +152,15 @@ class ClickableList extends StatefulWidget {
 class _TodoListState extends State<ClickableList> {
   bool _completed = false;
   List<Item> _items = [];
+  List<Item> _originalItems = [];
+  String _filteredBy = '';
 
   @override
   void initState() {
     super.initState();
     _completed = widget.completed;
     _items = widget.items;
+    _originalItems = widget.items;
   }
 
   void _showDetails(Item item) {
@@ -210,61 +213,151 @@ class _TodoListState extends State<ClickableList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Scrollbar(
-              child: ListView(
-                shrinkWrap: true,
-                children: _items
-                    .where((item) => item.completed == this._completed)
-                    .map((item) {
-                  return ListTile(
-                    title: Text(item.name),
-                    subtitle: Text(
-                        '${item.subject} - ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
-                    textColor: Colors.black,
-                    onTap: () {
-                      _showDetails(item);
-                    },
-                    trailing: PopupMenuButton(
-                      itemBuilder: (BuildContext context) {
-                        return [
-                          PopupMenuItem(
-                            child: Text(item.completed
-                                ? translate('assignments.mark_as_not_completed')
-                                : translate('assignments.mark_as_completed')),
-                            value: 'complete',
-                          ),
-                          // PopupMenuItem(
-                          //   child: Text('Delete'),
-                          //    value: 'delete',
-                          // ),
-                        ];
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Scrollbar(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: _items
+                      .where((item) => item.completed == this._completed)
+                      .map((item) {
+                    return ListTile(
+                      title: Text(item.name),
+                      subtitle: Text(
+                          '${item.subject} - ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
+                      textColor: Colors.black,
+                      onTap: () {
+                        _showDetails(item);
                       },
-                      onSelected: (value) {
-                        if (value == 'complete') {
-                          _toggleItemCompletion(item);
-                        }
-                        // else if (value == 'delete') {
-                        //   _deleteItem(item);
-                        // }
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
-            )),
-          ],
+                      trailing: PopupMenuButton(
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              child: Text(item.completed
+                                  ? translate(
+                                      'assignments.mark_as_not_completed')
+                                  : translate('assignments.mark_as_completed')),
+                              value: 'complete',
+                            ),
+                            // PopupMenuItem(
+                            //   child: Text('Delete'),
+                            //    value: 'delete',
+                            // ),
+                          ];
+                        },
+                        onSelected: (value) {
+                          if (value == 'complete') {
+                            _toggleItemCompletion(item);
+                          }
+                          // else if (value == 'delete') {
+                          //   _deleteItem(item);
+                          // }
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
-    );
+        floatingActionButton:
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              //...
+            },
+            heroTag: null,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            child: Icon(Icons.search),
+            backgroundColor: _filteredBy.isEmpty ? Colors.blue : Colors.green,
+            onPressed: () =>
+                _openSubjectSelector(context, _filteredBy).then((value) {
+              setState(() => {
+                    if (value != null)
+                      {
+                        if (value == 'Show all')
+                          {_items = _originalItems}
+                        else
+                          {
+                            _items = _originalItems
+                                .where((element) => element.subject == value)
+                                .toList()
+                          }
+                      }
+                  });
+              setState(() {
+                if (value != null) {
+                  if (value == 'Show all') {
+                    _filteredBy = '';
+                  } else {
+                    _filteredBy = value;
+                  }
+                }
+              });
+              return value;
+            }),
+            heroTag: null,
+          ),
+        ]));
   }
+}
+
+Future<String> _openSubjectSelector(
+    BuildContext context, String _filteredBy) async {
+  List<String> subjects = ['Show all', 'Personal', 'Work', 'Shopping'];
+  String selectedSubject = await showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        height: 200,
+        child: Scaffold(
+          appBar: AppBar(
+              title: Text(_filteredBy.isEmpty
+                  ? 'Select a subject to filter by'
+                  : 'Currently filtered by ${_filteredBy}'),
+              backgroundColor: _filteredBy.isEmpty ? Colors.blue : Colors.green,
+              automaticallyImplyLeading: false),
+          body: Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.0),
+              child: (ListView.builder(
+                itemCount: subjects.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(subjects[index]),
+                    onTap: () {
+                      Navigator.pop(context, subjects[index]);
+                    },
+                  );
+                },
+              ))),
+        ),
+      );
+    },
+  );
+  return selectedSubject;
+}
+
+void _showSelectedSubjectSnackbar(
+    BuildContext context, String selectedSubject) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Filtering by: ${selectedSubject}'),
+      duration: Duration(days: 365),
+      behavior: SnackBarBehavior.fixed,
+      action: SnackBarAction(
+        label: 'Clear filter',
+        onPressed: () {},
+      ),
+    ),
+  );
 }
