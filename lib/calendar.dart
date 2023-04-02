@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_event_calendar/flutter_event_calendar.dart';
 
@@ -69,9 +70,10 @@ class Calendar extends StatefulWidget {
 class CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
+    print(LocalizationDelegate);
     return (EventCalendar(
       calendarType: CalendarType.GREGORIAN,
-      calendarLanguage: 'lt',
+      calendarLanguage: translate('current_locale.locale'),
       headerOptions: HeaderOptions(monthStringType: MonthStringTypes.FULL),
       eventOptions: EventOptions(emptyText: ''),
       events: [

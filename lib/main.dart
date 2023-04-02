@@ -7,7 +7,7 @@ import 'package:ui/settings.dart';
 
 void main() async {
   var delegate = await LocalizationDelegate.create(
-      fallbackLocale: 'en_US', supportedLocales: ['en_US', 'lt']);
+      fallbackLocale: 'en', supportedLocales: ['en', 'lt']);
 
   runApp(LocalizedApp(delegate, MyApp()));
 }

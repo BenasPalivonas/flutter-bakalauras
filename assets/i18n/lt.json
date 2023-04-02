@@ -49,5 +49,8 @@
         "completed": "Atsiskaityti",
         "mark_as_not_completed": "Pažymėti kaip ne atsiskaitytą",
         "mark_as_completed": "Pažymėti kaip atsiskaitytą"
+    },
+    "current_locale": {
+        "locale": "lt"
     }
 }
