@@ -17,6 +17,8 @@ class Item {
       this.completed = false});
 }
 
+String filteredBy = '';
+
 class MyListScreen extends StatefulWidget {
   @override
   _MyListScreenState createState() => _MyListScreenState();
@@ -80,6 +82,18 @@ class _MyListScreenState extends State<MyListScreen> {
         date: DateTime.now().add(Duration(days: 1)),
         details: 'Ask about her trip',
         completed: false),
+    Item(
+        name: 'Call ben',
+        subject: 'Work',
+        date: DateTime.now().add(Duration(days: 1)),
+        details: 'Ask about her trip',
+        completed: true),
+    Item(
+        name: 'Call ben2',
+        subject: 'Work',
+        date: DateTime.now().add(Duration(days: 1)),
+        details: 'Ask about her trip',
+        completed: true),
     Item(
         name: 'Call meme',
         subject: 'Personal',
@@ -153,7 +167,7 @@ class _TodoListState extends State<ClickableList> {
   bool _completed = false;
   List<Item> _items = [];
   List<Item> _originalItems = [];
-  String _filteredBy = '';
+  String _filteredBy = filteredBy;
 
   @override
   void initState() {
@@ -161,6 +175,19 @@ class _TodoListState extends State<ClickableList> {
     _completed = widget.completed;
     _items = widget.items;
     _originalItems = widget.items;
+    _filteredBy = filteredBy;
+    if (filteredBy.isNotEmpty) {
+      setState(() => {
+            if (filteredBy == 'Show all')
+              {_items = _originalItems}
+            else
+              {
+                _items = _originalItems
+                    .where((element) => element.subject == filteredBy)
+                    .toList()
+              }
+          });
+    }
   }
 
   void _showDetails(Item item) {
@@ -299,8 +326,10 @@ class _TodoListState extends State<ClickableList> {
                 if (value != null) {
                   if (value == 'Show all') {
                     _filteredBy = '';
+                    filteredBy = '';
                   } else {
                     _filteredBy = value;
+                    filteredBy = value;
                   }
                 }
               });
