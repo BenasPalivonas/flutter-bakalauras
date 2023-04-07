@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:ui/settings.dart';
@@ -6,6 +7,8 @@ import 'calendar.dart';
 import 'lectures.dart';
 import 'list.dart';
 import 'package:get/get.dart';
+
+import 'notifications.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -27,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page'),
+    NotificationsPage(),
     LecturePage(),
     MyListScreen(),
     Calendar(),

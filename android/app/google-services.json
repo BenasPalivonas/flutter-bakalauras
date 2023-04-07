@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "325933520231",
+    "project_id": "benaspalivonas",
+    "storage_bucket": "benaspalivonas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325933520231:android:d5d2aec30794a84cf60bc2",
+        "android_client_info": {
+          "package_name": "benas.palivonas.ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325933520231-57pu7psffhmnlf2gmtv41i23roe7049b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEP0OFZawNEpiunXPSnsKgLDDm5ruUuq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325933520231-57pu7psffhmnlf2gmtv41i23roe7049b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
