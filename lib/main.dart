@@ -4,7 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:ui/login.dart';
 import 'package:ui/menu.dart';
+import 'package:ui/services/api_service.dart';
 import 'package:ui/services/local_notifications.dart';
 import 'package:ui/settings.dart';
 
@@ -28,6 +30,7 @@ void main() async {
     //       "${event?.notification?.title} + ${event?.notification?.body}, coming from foreground state";
     // });
   });
+  await ApiService().getLecturers();
   runApp(LocalizedApp(delegate, MyApp()));
 }
 
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: HomePage(),
+        home: LoginForm(),
       ),
     );
   }

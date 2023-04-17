@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ui/services/api_service.dart';
+
+import 'menu.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -12,7 +15,8 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return Scaffold(
+        body: Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,19 +49,33 @@ class _LoginFormState extends State<LoginForm> {
             },
           ),
           ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Validate login credentials here
-                // For example, you can check if the username and password match
-                // a database record or an API response.
-                // If the credentials are valid, you can navigate to the home page
-                // using the Navigator.push() method.
+            onPressed: () async {
+              // if (_formKey.currentState!.validate()) {
+              var body = {
+                'username': _usernameController.text.toString(),
+                'password': _passwordController.text.toString()
+              };
+              var answer = (await ApiService().Login(body));
+              if (answer == true) {
+                Navigator.push((context),
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              } else {
+                _showSnackbar(context, 'Failed to login');
               }
             },
             child: Text('Login'),
           ),
         ],
       ),
-    );
+    ));
   }
+}
+
+void _showSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    ),
+  );
 }
