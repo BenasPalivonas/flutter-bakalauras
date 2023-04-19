@@ -1,53 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-
-class Lecture {
-  final String subject;
-  final DateTime time;
-  final String venue;
-  final String lectrurer;
-
-  Lecture(
-      {required this.subject,
-      required this.time,
-      required this.venue,
-      required this.lectrurer});
-}
-
-List<Lecture> lectures = [
-  Lecture(
-      subject: "Matematika",
-      time: DateTime(2023, 4, 2, 10, 0),
-      venue: "101",
-      lectrurer: "Vardenis Pavardenis"),
-  Lecture(
-      subject: "Matematika2",
-      time: DateTime(2023, 4, 1, 10, 0),
-      venue: "101",
-      lectrurer: "Vardenis Pavardenis"),
-  Lecture(
-      subject: "Duomenų gavyba",
-      time: DateTime(2023, 4, 2, 14, 0),
-      venue: "202",
-      lectrurer: "Vardenis Pavardenis"),
-  Lecture(
-      subject: "Anglų kalba",
-      time: DateTime(2023, 4, 3, 9, 0),
-      venue: "303",
-      lectrurer: "Vardenis Pavardenis"),
-  Lecture(
-      subject: "Istorija",
-      time: DateTime(2023, 4, 4, 16, 0),
-      venue: "404",
-      lectrurer: "Vardenis Pavardenis"),
-  Lecture(
-      subject: "Istorija",
-      time: DateTime(2023, 4, 5, 16, 0),
-      venue: "404",
-      lectrurer: "Vardenis Pavardenis"),
-];
+import 'package:ui/services/api_service.dart';
 
 List<Lecture> _todayLectures = [];
 List<Lecture> _tomorrowLectures = [];
@@ -55,37 +12,52 @@ List<Lecture> _allWeekLectures = [];
 
 class LecturePage extends StatefulWidget {
   const LecturePage({Key? key}) : super(key: key);
+  // lectures = (await ApiService().getLectures())!;
 
   @override
   _LecturePageState createState() => _LecturePageState();
 }
 
 class _LecturePageState extends State<LecturePage> {
+  late List<Lecture> lectures = [];
+  bool isLoading = false;
   @override
-  void initState() {
+  initState() {
     super.initState();
-    // Filter the lectures by today, tomorrow, and all week
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-    DateTime tomorrow = today.add(Duration(days: 1));
-    _todayLectures = lectures
-        .where((lecture) =>
-            lecture.time.isAfter(today) && lecture.time.isBefore(tomorrow))
-        .toList();
-    _tomorrowLectures = lectures
-        .where((lecture) =>
-            lecture.time.isAfter(tomorrow) &&
-            lecture.time.isBefore(tomorrow.add(Duration(days: 1))))
-        .toList();
-    _allWeekLectures = lectures
-        .where((lecture) =>
-            lecture.time.isAfter(today) &&
-            lecture.time.isBefore(tomorrow.add(Duration(days: 7))))
-        .toList();
+    _getData();
+  }
+
+  void _getData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var answer = (await ApiService().getLectures());
+      Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
+            lectures = answer!;
+            isLoading = false;
+          }));
+    } catch (e) {
+      log(e.toString());
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    Weekday today = Weekday.values[now.weekday - 1];
+    Weekday tomorrow = Weekday.values[(now.weekday) % 7];
+
+    _todayLectures =
+        lectures.where((lecture) => lecture.weekday == today).toList();
+
+    _tomorrowLectures =
+        lectures.where((lecture) => lecture.weekday == tomorrow).toList();
+
+    _allWeekLectures = lectures;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -101,9 +73,9 @@ class _LecturePageState extends State<LecturePage> {
         ),
         body: TabBarView(
           children: [
-            _buildLectureList(_todayLectures),
-            _buildLectureList(_tomorrowLectures),
-            _buildLectureList(_allWeekLectures),
+            _buildLectureList(_todayLectures, isLoading),
+            _buildLectureList(_tomorrowLectures, isLoading),
+            _buildLectureList(_allWeekLectures, isLoading),
           ],
         ),
       ),
@@ -111,54 +83,62 @@ class _LecturePageState extends State<LecturePage> {
   }
 }
 
-Widget _buildLectureList(List<Lecture> lectures) {
+Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
   Map<String, List<Lecture>> groupedLectures = {};
   // group lectures by day of the week
   for (var lecture in lectures) {
-    String dayOfWeek = DateFormat('EEEE').format(lecture.time);
+    String dayOfWeek = lecture.weekday.name;
     if (!groupedLectures.containsKey(dayOfWeek)) {
       groupedLectures[dayOfWeek] = [];
     }
     groupedLectures[dayOfWeek]?.add(lecture);
   }
+
   // build list view with section headers for each day
-  return ListView.builder(
-    itemCount: groupedLectures.length,
-    itemBuilder: (context, index) {
-      String dayOfWeek = groupedLectures.keys.elementAt(index);
-      List<Lecture> dayLectures = groupedLectures[dayOfWeek]!;
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // section header with day of week name
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              translate("weekDay.${dayOfWeek}"),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+  return isLoading
+      ? Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
-          // list of lectures for the day
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: dayLectures.length,
-            itemBuilder: (context, index) {
-              Lecture lecture = dayLectures[index];
-              return ListTile(
-                title: Text("${lecture.subject.tr}"),
-                trailing: Text(DateFormat('HH:mm').format(lecture.time)),
-                subtitle: Text(
-                    "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lectrurer}"),
-                textColor: Colors.black,
-              );
-            },
-          ),
-        ],
-      );
-    },
-  );
+        )
+      : ListView.builder(
+          itemCount: groupedLectures.length,
+          itemBuilder: (context, index) {
+            String dayOfWeek = groupedLectures.keys.elementAt(index);
+            List<Lecture> dayLectures = groupedLectures[dayOfWeek]!;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // section header with day of week name
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    translate("weekDay.${dayOfWeek}"),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                // list of lectures for the day
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: dayLectures.length,
+                  itemBuilder: (context, index) {
+                    Lecture lecture = dayLectures[index];
+                    return ListTile(
+                      title: Text("${lecture.subject.tr}"),
+                      trailing: Text(lecture.time),
+                      subtitle: Text(
+                          "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lecturer.name}"),
+                      textColor: Colors.black,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
 }

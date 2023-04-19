@@ -30,7 +30,6 @@ void main() async {
     //       "${event?.notification?.title} + ${event?.notification?.body}, coming from foreground state";
     // });
   });
-  await ApiService().getLecturers();
   runApp(LocalizedApp(delegate, MyApp()));
 }
 
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: LoginForm(),
+        home: HomePage(),
       ),
     );
   }
