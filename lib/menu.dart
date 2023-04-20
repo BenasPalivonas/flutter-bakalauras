@@ -5,7 +5,7 @@ import 'package:ui/settings.dart';
 
 import 'calendar.dart';
 import 'lectures.dart';
-import 'list.dart';
+import 'assignments.dart';
 import 'package:get/get.dart';
 
 import 'notifications.dart';

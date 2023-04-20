@@ -129,7 +129,7 @@ Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
                   itemBuilder: (context, index) {
                     Lecture lecture = dayLectures[index];
                     return ListTile(
-                      title: Text("${lecture.subject.tr}"),
+                      title: Text("${lecture.subject.name.tr}"),
                       trailing: Text(lecture.time),
                       subtitle: Text(
                           "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lecturer.name}"),
