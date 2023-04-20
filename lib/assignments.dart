@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -137,7 +138,9 @@ class _TodoListState extends State<ClickableList> {
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${item.subject.name}'),
               SizedBox(height: 8),
-              Text('Lecturer: ${item.lecturer.name}'),
+              item.lecturer == null
+                  ? Text('')
+                  : Text('Lecturer: ${item.lecturer?.name}'),
               SizedBox(height: 8),
               Text(
                   '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
@@ -163,7 +166,7 @@ class _TodoListState extends State<ClickableList> {
   Future<void> _toggleItemCompletion(Assignment item) async {
     try {
       bool setCompleted = !item.completed;
-      await ApiService().updateAssignment(item.id, setCompleted);
+      await ApiService().updateAssignment(item.id!, setCompleted);
       setState(() {
         _items = _items.map((assignment) {
           if (assignment.id == item.id) {
@@ -190,6 +193,155 @@ class _TodoListState extends State<ClickableList> {
     setState(() {
       _items.remove(item);
     });
+  }
+
+  Future<Assignment?> createAssignment(BuildContext context) async {
+    String name = '';
+    DateTime selectedDate = DateTime.now();
+    String details = '';
+    bool completed = false;
+    Lecturer? selectedLecturer;
+    Subject? selectedSubject;
+    bool isLoading = true;
+    List<Subject> subjects = [];
+    Assignment? createdAssignment = null;
+    Completer<Assignment?> completer = Completer();
+
+    try {
+      var responseSubjects = (await ApiService().getSubjects())!;
+      setState(() {
+        subjects = responseSubjects;
+      });
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Name'),
+                          onChanged: (value) => setState(() => name = value),
+                        ),
+                        DropdownButton<Subject>(
+                          value: selectedSubject,
+                          hint: Text('Select a subject'),
+                          onChanged: isLoading
+                              ? null
+                              : (value) =>
+                                  setState(() => selectedSubject = value),
+                          items: subjects
+                              .map((l) => DropdownMenuItem<Subject>(
+                                    value: l,
+                                    child: Text(l.name),
+                                  ))
+                              .toList(),
+                        ),
+                        SizedBox(height: 16.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Select Date/Time:',
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.black.withOpacity(0.6)),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () async {
+                                  final currentDate = DateTime.now();
+                                  final pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: selectedDate,
+                                    firstDate: currentDate,
+                                    lastDate: DateTime(currentDate.year + 1),
+                                  );
+
+                                  if (pickedDate != null) {
+                                    final pickedTime = await showTimePicker(
+                                      context: context,
+                                      initialTime:
+                                          TimeOfDay.fromDateTime(selectedDate),
+                                    );
+
+                                    if (pickedTime != null) {
+                                      setState(() {
+                                        selectedDate = DateTime(
+                                          pickedDate.year,
+                                          pickedDate.month,
+                                          pickedDate.day,
+                                          pickedTime.hour,
+                                          pickedTime.minute,
+                                        );
+                                      });
+                                    }
+                                  }
+                                },
+                                child: Text(
+                                  'Date: ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextField(
+                          decoration: InputDecoration(labelText: 'Details'),
+                          onChanged: (value) => setState(() => details = value),
+                        ),
+                        SizedBox(height: 16.0),
+                        ElevatedButton(
+                          onPressed: () async {
+                            createdAssignment = Assignment(
+                              name: name,
+                              subject: selectedSubject!,
+                              date: selectedDate,
+                              details: details,
+                              completed: completed,
+                            );
+                            // TODO: Save the assignment
+
+                            try {
+                              await ApiService()
+                                  .createAssignment(createdAssignment!);
+                              Navigator.pop(context, createdAssignment);
+                              completer.complete(createdAssignment);
+                            } catch (e) {
+                              log(e.toString());
+                              completer.complete(null);
+                            }
+                          },
+                          child: Text('Create Assignment'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+    return completer.future;
   }
 
   @override
@@ -258,8 +410,14 @@ class _TodoListState extends State<ClickableList> {
                 Column(mainAxisAlignment: MainAxisAlignment.end, children: [
               FloatingActionButton(
                 child: Icon(Icons.add),
-                onPressed: () {
-                  //...
+                onPressed: () async {
+                  var response = (await createAssignment(context));
+                  if (response != null) {
+                    setState(() {
+                      _originalItems.add(response);
+                      _items.add(response);
+                    });
+                  }
                 },
                 heroTag: null,
               ),

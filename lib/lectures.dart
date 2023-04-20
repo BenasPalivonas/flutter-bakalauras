@@ -132,7 +132,7 @@ Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
                       title: Text("${lecture.subject.name.tr}"),
                       trailing: Text(lecture.time),
                       subtitle: Text(
-                          "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lecturer.name}"),
+                          "${translate('subtitles.venue')}: ${lecture.venue} - ${translate('subtitles.lecturer')}: ${lecture.lecturer?.name}"),
                       textColor: Colors.black,
                     );
                   },

@@ -4,4 +4,5 @@ class ApiConstants {
   static String lecturers = 'lecturers/';
   static String lectures = 'lectures/';
   static String assignments = 'assignments/';
+  static String subjects = 'lecture_subjects/';
 }
