@@ -16,25 +16,27 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   String text = "";
 
-  @override
-  void initState() {
-    super.initState();
-    LocalNotificationService.initilize();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   LocalNotificationService.initilize();
 
-    FirebaseMessaging.instance.getInitialMessage().then((event) {
-      setState(() {
-        text =
-            "${event?.notification?.title} + ${event?.notification?.body}, coming from terminated state";
-      });
-    });
-   
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      setState(() {
-        text =
-            "${event?.notification?.title} + ${event?.notification?.body}, coming from background state";
-      });
-    });
-  }
+  //   FirebaseMessaging.instance.getInitialMessage().then((event) {
+  //     print('terminated');
+  //     setState(() {
+  //       text =
+  //           "${event?.notification?.title} + ${event?.notification?.body}, coming from terminated state";
+  //     });
+  //   });
+
+  //   FirebaseMessaging.onMessageOpenedApp.listen((event) {
+  //     print('background');
+  //     setState(() {
+  //       text =
+  //           "${event?.notification?.title} + ${event?.notification?.body}, coming from background state";
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

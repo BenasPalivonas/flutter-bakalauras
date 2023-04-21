@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,14 +26,18 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   LocalNotificationService.initilize();
-  FirebaseMessaging.onMessage.listen((event) {
-    LocalNotificationService.showNotificationOnForeground(event);
-    // setState(() {
-    //   text =
-    //       "${event?.notification?.title} + ${event?.notification?.body}, coming from foreground state";
-    // });
+  getRegistrationId();
+  FirebaseMessaging.onMessage.listen((message) {
+    print('hello from backend');
+    inspect(message);
+    LocalNotificationService.showNotificationOnForeground(message);
   });
   runApp(LocalizedApp(delegate, MyApp()));
+}
+
+void getRegistrationId() async {
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("Registration ID: $token");
 }
 
 class MyApp extends StatelessWidget {
@@ -50,7 +57,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: LoginForm(),
+        home: HomePage(),
       ),
     );
   }
