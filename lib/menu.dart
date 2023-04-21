@@ -1,9 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:ui/login.dart';
 import 'package:ui/settings.dart';
 
 import 'calendar.dart';
+import 'contact.dart';
 import 'lectures.dart';
 import 'assignments.dart';
 import 'package:get/get.dart';
@@ -30,10 +32,10 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   List<Widget> _widgetOptions = <Widget>[
-    NotificationsPage(),
     LecturePage(),
     MyListScreen(),
     Calendar(),
+    ContactList(),
     SettingsPage(),
   ];
 
@@ -65,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text(translate('tabs.home')),
+              title: Text(translate('tabs.lectures')),
               selected: _selectedIndex == 0,
               onTap: () {
                 _onItemTapped(0);
@@ -73,8 +75,8 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text(translate('tabs.lectures')),
+              leading: Icon(Icons.message),
+              title: Text(translate('tabs.assignments')),
               selected: _selectedIndex == 1,
               onTap: () {
                 _onItemTapped(1);
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text(translate('tabs.assignments')),
+              title: Text(translate('tabs.calendar')),
               selected: _selectedIndex == 2,
               onTap: () {
                 _onItemTapped(2);
@@ -91,8 +93,8 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text(translate('tabs.calendar')),
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contacts'),
               selected: _selectedIndex == 3,
               onTap: () {
                 _onItemTapped(3);
@@ -106,6 +108,17 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 _onItemTapped(4);
                 Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginForm()),
+                );
               },
             ),
           ],
