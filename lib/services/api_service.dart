@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import 'api_constants.dart';
+
+String userGroup = '';
+String userNumber = '';
 
 class ApiService {
   Map<String, String> headers = {
@@ -101,13 +106,14 @@ class ApiService {
   }
 
   // API GUIDE https://blog.codemagic.io/rest-api-in-flutter/
-  Future<bool> Login(Object apiBody) async {
+  Future<bool> Login(dynamic apiBody) async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.login);
       var response =
           await http.post(url, headers: headers, body: jsonEncode(apiBody));
       if (response.statusCode == 200) {
-        print(json.decode(response.body)['success']);
+        userNumber = json.decode(response.body)['student_number'];
+        userGroup = json.decode(response.body)['student_group'];
         return json.decode(response.body)['success'];
       }
     } catch (e) {
@@ -178,6 +184,7 @@ class Lecture {
   final String time;
   final String venue;
   final Lecturer? lecturer;
+  final List<dynamic> studentGroups;
   final Weekday weekday;
 
   Lecture({
@@ -186,6 +193,7 @@ class Lecture {
     required this.time,
     required this.venue,
     required this.lecturer,
+    required this.studentGroups,
     required this.weekday,
   });
 
@@ -195,12 +203,31 @@ class Lecture {
       subject: Subject.fromJson(json['subject']),
       time: json['time'],
       venue: json['venue'],
+      studentGroups: (json['student_groups']
+          .map((group) => StudentGroup.fromJson(group))
+          .toList()),
       lecturer:
           json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
       weekday: Weekday.values[Weekday.values
           .map((e) => e.toString().split('.')[1])
           .toList()
           .indexOf(json['day_of_week'].toString().toLowerCase())],
+    );
+  }
+}
+
+class StudentGroup {
+  final String id;
+  final String name;
+  StudentGroup({
+    required this.id,
+    required this.name,
+  });
+
+  factory StudentGroup.fromJson(Map<String, dynamic> json) {
+    return StudentGroup(
+      id: json['id'].toString(),
+      name: json['name'],
     );
   }
 }
@@ -242,6 +269,40 @@ class Assignment {
       completed: json['completed'],
       lecturer:
           json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
+    );
+  }
+
+  void showDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(subject.name),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${translate('modal.name')} ${name}'),
+              SizedBox(height: 8),
+              Text('${translate('modal.subject')} ${subject.name}'),
+              SizedBox(height: 8),
+              Text('lecturer: ${lecturer?.name}'),
+              SizedBox(height: 8),
+              Text('${translate('modal.additional_details')} ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(details),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

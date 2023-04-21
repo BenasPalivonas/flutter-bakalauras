@@ -1,52 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_event_calendar/flutter_event_calendar.dart';
 
 import 'package:flutter/material.dart';
-
-class ListItem {
-  String name;
-  String subject;
-  String details;
-
-  ListItem({required this.name, required this.subject, required this.details});
-
-  void showDetails(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(subject),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('${translate('modal.name')} ${name}'),
-              SizedBox(height: 8),
-              Text('${translate('modal.subject')} ${subject}'),
-              SizedBox(height: 8),
-              Text('${translate('modal.additional_details')}',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(details),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
+import 'package:ui/services/api_service.dart';
 
 class MyListItem extends StatelessWidget {
-  final ListItem item;
+  final Assignment item;
 
   MyListItem({required this.item});
 
@@ -54,7 +17,7 @@ class MyListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(item.name),
-      subtitle: Text(item.subject),
+      subtitle: Text(item.subject.name),
       onTap: () {
         item.showDetails(context);
       },
@@ -68,6 +31,34 @@ class Calendar extends StatefulWidget {
 }
 
 class CalendarState extends State<Calendar> {
+  List<Assignment> items = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getAssignments();
+    print(userNumber);
+  }
+
+  Future<void> getAssignments() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var response = (await ApiService().getAssignments())!;
+      setState(() {
+        items = response;
+      });
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print(LocalizationDelegate);
@@ -76,34 +67,16 @@ class CalendarState extends State<Calendar> {
       calendarLanguage: translate('current_locale.locale'),
       headerOptions: HeaderOptions(monthStringType: MonthStringTypes.FULL),
       eventOptions: EventOptions(emptyText: ''),
-      events: [
-        Event(
-          child: MyListItem(
-              item: new ListItem(
-                  name: 'Test',
-                  subject: 'test',
-                  details: 'additional details')),
-          dateTime: CalendarDateTime(
-            year: 2023,
-            month: 4,
-            day: 3,
-            calendarType: CalendarType.GREGORIAN,
-          ),
-        ),
-        Event(
-          child: MyListItem(
-              item: new ListItem(
-                  name: 'Test1',
-                  subject: 'test1',
-                  details: 'additional details')),
-          dateTime: CalendarDateTime(
-            year: 2023,
-            month: 4,
-            day: 3,
-            calendarType: CalendarType.GREGORIAN,
-          ),
-        ),
-      ],
+      events: items
+          .map((e) => Event(
+              child: MyListItem(item: e),
+              dateTime: CalendarDateTime(
+                year: e.date.year,
+                month: e.date.month,
+                day: e.date.day,
+                calendarType: CalendarType.GREGORIAN,
+              )))
+          .toList(),
     )); // return
   }
 }
