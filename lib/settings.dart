@@ -42,18 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       vertical: 10.0, horizontal: 36.0),
                   onPressed: () => _onActionSheetPress(context),
                 )),
-            Text(translate('language.selected_message', args: {
-              'language': translate(
-                  'language.name.${localizationDelegate.currentLocale.languageCode}')
-            })),
-            Padding(
-                padding: EdgeInsets.only(top: 25, bottom: 160),
-                child: CupertinoButton.filled(
-                  child: Text(translate('button.change_language')),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 36.0),
-                  onPressed: () => _onActionSheetPress(context),
-                )),
           ],
         ),
       ),

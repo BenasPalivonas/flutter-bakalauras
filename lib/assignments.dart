@@ -92,9 +92,10 @@ class _TodoListState extends State<ClickableList> {
     _completed = widget.completed;
     _originalItems = _items;
     _filteredBy = filteredBy;
+    print(filteredBy == translate('filter.show_all'));
     if (filteredBy.isNotEmpty) {
       setState(() => {
-            if (filteredBy == 'Show all')
+            if (filteredBy == translate('filter.show_all'))
               {_items = _originalItems}
             else
               {
@@ -113,7 +114,14 @@ class _TodoListState extends State<ClickableList> {
     try {
       var response = (await ApiService().getAssignments())!;
       setState(() {
-        _items = response;
+        if (filteredBy.isNotEmpty) {
+          _items = response
+              .where((element) => element.subject.name == filteredBy)
+              .toList();
+        } else {
+          _items = response;
+        }
+        _originalItems = response;
       });
     } catch (e) {
       log(e.toString());
@@ -140,7 +148,8 @@ class _TodoListState extends State<ClickableList> {
               SizedBox(height: 8),
               item.lecturer == null
                   ? Text('')
-                  : Text('Lecturer: ${item.lecturer?.name}'),
+                  : Text(
+                      '${translate('modal.lecturer')} ${item.lecturer?.name}'),
               SizedBox(height: 8),
               Text(
                   '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
@@ -238,12 +247,13 @@ class _TodoListState extends State<ClickableList> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextField(
-                          decoration: InputDecoration(labelText: 'Name'),
+                          decoration: InputDecoration(
+                              labelText: translate('dropdown.name')),
                           onChanged: (value) => setState(() => name = value),
                         ),
                         DropdownButton<Subject>(
                           value: selectedSubject,
-                          hint: Text('Select a subject'),
+                          hint: Text(translate('dropdown.subject')),
                           onChanged: isLoading
                               ? null
                               : (value) =>
@@ -260,7 +270,7 @@ class _TodoListState extends State<ClickableList> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Select Date/Time:',
+                                translate('dropdown.select_date_time'),
                                 style: TextStyle(
                                     fontSize: 16.0,
                                     color: Colors.black.withOpacity(0.6)),
@@ -298,7 +308,7 @@ class _TodoListState extends State<ClickableList> {
                                   }
                                 },
                                 child: Text(
-                                  'Date: ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
+                                  '${translate('dropdown.date')} ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
                                   style: TextStyle(fontSize: 16.0),
                                 ),
                               ),
@@ -306,7 +316,8 @@ class _TodoListState extends State<ClickableList> {
                           ],
                         ),
                         TextField(
-                          decoration: InputDecoration(labelText: 'Details'),
+                          decoration: InputDecoration(
+                              labelText: translate('dropdown.details')),
                           onChanged: (value) => setState(() => details = value),
                         ),
                         SizedBox(height: 16.0),
@@ -331,7 +342,7 @@ class _TodoListState extends State<ClickableList> {
                               completer.complete(null);
                             }
                           },
-                          child: Text('Create Assignment'),
+                          child: Text(translate('dropdown.create')),
                         ),
                       ],
                     ),
@@ -430,10 +441,13 @@ class _TodoListState extends State<ClickableList> {
                     _filteredBy.isEmpty ? Colors.blue : Colors.green,
                 onPressed: () =>
                     _openSubjectSelector(context, _filteredBy).then((value) {
+                  if (value == translate('filter.show_all')) {
+                    print(_originalItems.length);
+                  }
                   setState(() => {
                         if (value != null)
                           {
-                            if (value == 'Show all')
+                            if (value == translate('filter.show_all'))
                               {_items = _originalItems}
                             else
                               {
@@ -446,7 +460,7 @@ class _TodoListState extends State<ClickableList> {
                       });
                   setState(() {
                     if (value != null) {
-                      if (value == 'Show all') {
+                      if (value == translate('filter.show_all')) {
                         _filteredBy = '';
                         filteredBy = '';
                       } else {
@@ -465,7 +479,14 @@ class _TodoListState extends State<ClickableList> {
 
 Future<String> _openSubjectSelector(
     BuildContext context, String _filteredBy) async {
-  List<String> subjects = ['Show all', 'Personal', 'Work', 'Shopping'];
+  // fetch subjects from api
+
+  List<String> subjects = [translate('filter.show_all')];
+  var response = await (ApiService().getSubjects())!;
+  var responseNames = response?.map((e) => e.name).toList() ?? [];
+
+  subjects.addAll(responseNames);
+
   String selectedSubject = await showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -474,8 +495,8 @@ Future<String> _openSubjectSelector(
         child: Scaffold(
           appBar: AppBar(
               title: Text(_filteredBy.isEmpty
-                  ? 'Select a subject to filter by'
-                  : 'Currently filtered by ${_filteredBy}'),
+                  ? translate('filter.select_title')
+                  : '${translate('filter.currently_filtered')} ${_filteredBy}'),
               backgroundColor: _filteredBy.isEmpty ? Colors.blue : Colors.green,
               automaticallyImplyLeading: false),
           body: Padding(
@@ -496,19 +517,4 @@ Future<String> _openSubjectSelector(
     },
   );
   return selectedSubject;
-}
-
-void _showSelectedSubjectSnackbar(
-    BuildContext context, String selectedSubject) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('Filtering by: ${selectedSubject}'),
-      duration: Duration(days: 365),
-      behavior: SnackBarBehavior.fixed,
-      action: SnackBarAction(
-        label: 'Clear filter',
-        onPressed: () {},
-      ),
-    ),
-  );
 }

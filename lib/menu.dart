@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.contact_mail),
-              title: Text('Contacts'),
+              title: Text(translate('tabs.contacts')),
               selected: _selectedIndex == 3,
               onTap: () {
                 _onItemTapped(3);
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
             Divider(),
             ListTile(
               leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              title: Text(translate('tabs.logout')),
               onTap: () {
                 Navigator.push(
                   context,

@@ -22,7 +22,9 @@
         "lectures": "Lectures",
         "assignments": "Assignments",
         "calendar": "Calendar",
-        "settings": "Settings"
+        "settings": "Settings",
+        "contacts": "Contacts",
+        "logout": "Logout"
     },
     "weekDay": {
         "Monday": "Monday",
@@ -57,6 +59,23 @@
         "name": "Name:",
         "subject": "Subject:",
         "date": "Date:",
-        "additional_details": "Additional Details:"
+        "additional_details": "Additional Details:",
+        "lecturer": "Lecturer:"
+    },
+    "dropdown": {
+        "name": "Name:",
+        "subject": "Select a subject:",
+        "select_date_time": "Select Date/Time:",
+        "details": "Details:",
+        "date": "Date:",
+        "create": "Create Assignment"
+    },
+    "filter": {
+        "select_title": "Select a subject to filter by",
+        "show_all": "Show all",
+        "currently_filtered": "Currently filtered by"
+    },
+    "contacts": {
+        "search_lecturers": "Search by name"
     }
 }

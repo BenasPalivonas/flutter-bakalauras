@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:ui/services/api_service.dart';
 
 class ContactList extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ContactListState extends State<ContactList> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search Lecturers',
+                hintText: translate('contacts.search_lecturers'),
               ),
               onChanged: _filterLecturers,
             )),

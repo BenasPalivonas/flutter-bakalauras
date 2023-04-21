@@ -28,7 +28,6 @@ void main() async {
   LocalNotificationService.initilize();
   getRegistrationId();
   FirebaseMessaging.onMessage.listen((message) {
-    print('hello from backend');
     inspect(message);
     LocalNotificationService.showNotificationOnForeground(message);
   });
@@ -57,7 +56,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: HomePage(),
+        home: LoginForm(),
       ),
     );
   }

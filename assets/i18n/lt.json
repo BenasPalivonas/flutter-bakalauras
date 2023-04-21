@@ -22,16 +22,18 @@
         "lectures": "Tvarkaraštis",
         "assignments": "Atsiskaitymai",
         "calendar": "Kalendorius",
-        "settings": "Nustatymai"
+        "settings": "Nustatymai",
+        "contacts": "Kontaktai",
+        "logout": "Atsijungti"
     },
     "weekDay": {
-        "pirmadienis": "Pirmadienis",
-        "antradienis": "Antradienis",
-        "trečiadienis": "Trečiadienis",
-        "ketvirtadienis": "Ketvirtadienis",
-        "penktadienis": "Penktadienis",
-        "šeštadienis": "Šeštadienis",
-        "sekmadienis": "Sekmadienis"
+        "Monday": "Pirmadienis",
+        "Tuesday": "Antradienis",
+        "Wednesday": "Trečiadienis",
+        "Thursday": "Ketvirtadienis",
+        "Friday": "Penktadienis",
+        "Saturday": "Šeštadienis",
+        "Sunday": "Sekmadienis"
     },
     "lectures_tabs": {
         "title": "Paskaitos",
@@ -57,6 +59,23 @@
         "name": "Pavadinimas:",
         "subject": "Dalykas:",
         "date": "Data:",
-        "additional_details": "Papildoma informacija:"
+        "additional_details": "Papildoma informacija:",
+        "lecturer": "Dėstytojas:"
+    },
+    "dropdown": {
+        "name": "Pavadinimas:",
+        "subject": "Pasirinkite dalyką:",
+        "select_date_time": "Pasirinkite Datą/Laiką:",
+        "details": "Aprašymas:",
+        "date": "Data:",
+        "create": "Sukurkite Atsiskaitymą"
+    },
+    "filter": {
+        "select_title": "Pasirinkite dalyko filtrą",
+        "show_all": "Rodyti visus",
+        "currently_filtered": "Šiuo metu filtruojama pagal"
+    },
+    "contacts": {
+        "search_lecturers": "Ieškoti pagal vardą"
     }
 }

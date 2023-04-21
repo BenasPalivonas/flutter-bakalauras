@@ -286,7 +286,7 @@ class Assignment {
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${subject.name}'),
               SizedBox(height: 8),
-              Text('lecturer: ${lecturer?.name}'),
+              Text('${translate('modal.lecturer')} ${lecturer?.name}'),
               SizedBox(height: 8),
               Text('${translate('modal.additional_details')} ',
                   style: TextStyle(fontWeight: FontWeight.bold)),

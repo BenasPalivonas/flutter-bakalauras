@@ -33,16 +33,14 @@ class _LecturePageState extends State<LecturePage> {
     });
     try {
       var answer = (await ApiService().getLectures());
-      print(userGroup);
       answer = answer
           ?.where((element) =>
               element.studentGroups.any((sg) => sg.name == userGroup))
           .toList();
-      print(answer?.length);
-      Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {
-            lectures = answer!;
-            isLoading = false;
-          }));
+      setState(() {
+        lectures = answer!;
+        isLoading = false;
+      });
     } catch (e) {
       log(e.toString());
       setState(() {
