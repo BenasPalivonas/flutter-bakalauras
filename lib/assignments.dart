@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ui/services/api_service.dart';
 
@@ -28,6 +29,7 @@ class _MyListScreenState extends State<MyListScreen> {
       initialIndex: _currentIndex,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(translate('assignments.title')),
         ),
         body: Column(
@@ -200,7 +202,7 @@ class _TodoListState extends State<ClickableList> {
 
   void _deleteItem(Assignment item) {
     setState(() {
-      _items.remove(item);
+      _originalItems.remove(item);
     });
   }
 
@@ -324,12 +326,12 @@ class _TodoListState extends State<ClickableList> {
                         ElevatedButton(
                           onPressed: () async {
                             createdAssignment = Assignment(
-                              name: name,
-                              subject: selectedSubject!,
-                              date: selectedDate,
-                              details: details,
-                              completed: completed,
-                            );
+                                name: name,
+                                subject: selectedSubject!,
+                                date: selectedDate,
+                                details: details,
+                                completed: completed,
+                                student_id: USER_ID);
                             // TODO: Save the assignment
 
                             try {
@@ -375,6 +377,9 @@ class _TodoListState extends State<ClickableList> {
                       shrinkWrap: true,
                       children: _items
                           .where((item) => item.completed == this._completed)
+                          .where((item) => item?.student == null
+                              ? true
+                              : item.student?.id == USER_ID)
                           .map((item) {
                         return ListTile(
                           title: Text(item.name),
@@ -384,32 +389,45 @@ class _TodoListState extends State<ClickableList> {
                           onTap: () {
                             _showDetails(item);
                           },
-                          trailing: PopupMenuButton(
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                PopupMenuItem(
-                                  child: Text(item.completed
-                                      ? translate(
-                                          'assignments.mark_as_not_completed')
-                                      : translate(
-                                          'assignments.mark_as_completed')),
-                                  value: 'complete',
-                                ),
-                                // PopupMenuItem(
-                                //   child: Text('Delete'),
-                                //    value: 'delete',
-                                // ),
-                              ];
-                            },
-                            onSelected: (value) {
-                              if (value == 'complete') {
-                                _toggleItemCompletion(item);
-                              }
-                              // else if (value == 'delete') {
-                              //   _deleteItem(item);
-                              // }
-                            },
-                          ),
+                          trailing: item.student_id != null ||
+                                  item.student?.id != null
+                              ? PopupMenuButton(
+                                  itemBuilder: (BuildContext context) {
+                                    return [
+                                      PopupMenuItem(
+                                        child: Text(
+                                            translate('assignments.delete')),
+                                        value: 'delete',
+                                      ),
+                                    ];
+                                  },
+                                  onSelected: (value) async {
+                                    if (value == 'delete') {
+                                      var id = item.id ??
+                                          _originalItems
+                                              .firstWhere(
+                                                  (i) => i.name == item.name)
+                                              .id;
+
+                                      inspect(id);
+                                      var response;
+                                      try {
+                                        response = await ApiService()
+                                            .deleteAssignment(id!);
+                                      } catch (e) {
+                                        response = true;
+                                      }
+
+                                      if (response == true) {
+                                        _deleteItem(item);
+                                      } else {
+                                        _showSnackbar(
+                                            context, "Failed to delete item");
+                                      }
+                                    }
+                                  },
+                                )
+                              : null,
                         );
                       }).toList(),
                     ),
@@ -426,7 +444,6 @@ class _TodoListState extends State<ClickableList> {
                   if (response != null) {
                     setState(() {
                       _originalItems.add(response);
-                      _items.add(response);
                     });
                   }
                 },
@@ -441,9 +458,7 @@ class _TodoListState extends State<ClickableList> {
                     _filteredBy.isEmpty ? Colors.blue : Colors.green,
                 onPressed: () =>
                     _openSubjectSelector(context, _filteredBy).then((value) {
-                  if (value == translate('filter.show_all')) {
-                    print(_originalItems.length);
-                  }
+                  if (value == translate('filter.show_all')) {}
                   setState(() => {
                         if (value != null)
                           {
@@ -517,4 +532,13 @@ Future<String> _openSubjectSelector(
     },
   );
   return selectedSubject;
+}
+
+void _showSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    ),
+  );
 }

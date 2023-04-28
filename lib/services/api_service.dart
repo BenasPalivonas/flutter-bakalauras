@@ -7,8 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import 'api_constants.dart';
 
-String userGroup = '';
-String userNumber = '';
+String USER_GROUP = '';
+String USER_NUMBER = '';
+String USER_ID = '';
 
 class ApiService {
   Map<String, String> headers = {
@@ -94,7 +95,6 @@ class ApiService {
       'Content-Type': 'application/json; charset=UTF-8',
     };
     final body = jsonEncode(assignment.toJson());
-    print(body.toString());
 
     final response = await http.post(url, headers: headers, body: body);
 
@@ -105,6 +105,19 @@ class ApiService {
     }
   }
 
+  Future<bool> deleteAssignment(String id) async {
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + "/");
+    print(url);
+    final response = await http.delete(url, headers: headers);
+    inspect(response);
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // API GUIDE https://blog.codemagic.io/rest-api-in-flutter/
   Future<bool> Login(dynamic apiBody) async {
     try {
@@ -112,8 +125,9 @@ class ApiService {
       var response =
           await http.post(url, headers: headers, body: jsonEncode(apiBody));
       if (response.statusCode == 200) {
-        userNumber = json.decode(response.body)['student_number'];
-        userGroup = json.decode(response.body)['student_group'];
+        USER_NUMBER = json.decode(response.body)['student_number'];
+        USER_GROUP = json.decode(response.body)['student_group'];
+        USER_ID = json.decode(response.body)['id'].toString();
         return json.decode(response.body)['success'];
       }
     } catch (e) {
@@ -232,6 +246,31 @@ class StudentGroup {
   }
 }
 
+class Student {
+  final String id;
+  final String fullName;
+  final String username;
+  final String email;
+  final StudentGroup studentGroup;
+  Student({
+    required this.id,
+    required this.fullName,
+    required this.username,
+    required this.email,
+    required this.studentGroup,
+  });
+
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(
+      id: json['id'].toString(),
+      fullName: json['full_name'],
+      username: json['username'],
+      email: json['email'],
+      studentGroup: StudentGroup.fromJson(json['student_group']),
+    );
+  }
+}
+
 class Assignment {
   final String? id;
   final String name;
@@ -240,6 +279,8 @@ class Assignment {
   final String details;
   final bool completed;
   final Lecturer? lecturer;
+  final Student? student;
+  final String? student_id;
 
   Assignment({
     this.id,
@@ -248,12 +289,15 @@ class Assignment {
     required this.date,
     required this.details,
     this.lecturer,
+    this.student,
+    this.student_id,
     required this.completed,
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'subject_id': subject.id,
+        'student_id': student_id,
         'due_date': date.toIso8601String(),
         'details': details,
         'completed': completed,
@@ -269,6 +313,8 @@ class Assignment {
       completed: json['completed'],
       lecturer:
           json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
+      student:
+          json['student'] == null ? null : Student.fromJson(json['student']),
     );
   }
 

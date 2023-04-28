@@ -24,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(translate('app_bar.settings_title')),
       ),
       body: Center(

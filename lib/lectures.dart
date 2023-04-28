@@ -35,7 +35,7 @@ class _LecturePageState extends State<LecturePage> {
       var answer = (await ApiService().getLectures());
       answer = answer
           ?.where((element) =>
-              element.studentGroups.any((sg) => sg.name == userGroup))
+              element.studentGroups.any((sg) => sg.name == USER_GROUP))
           .toList();
       setState(() {
         lectures = answer!;
@@ -66,6 +66,7 @@ class _LecturePageState extends State<LecturePage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(translate('lectures_tabs.title')),
           bottom: TabBar(
             tabs: [

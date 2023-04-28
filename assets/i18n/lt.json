@@ -49,8 +49,7 @@
         "title": "Atsiskaitymai",
         "not_completed": "Neatsiskaityti",
         "completed": "Atsiskaityti",
-        "mark_as_not_completed": "Pažymėti kaip ne atsiskaitytą",
-        "mark_as_completed": "Pažymėti kaip atsiskaitytą"
+        "delete": "Ištrinti"
     },
     "current_locale": {
         "locale": "lt"

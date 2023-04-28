@@ -38,7 +38,7 @@ class CalendarState extends State<Calendar> {
   void initState() {
     super.initState();
     getAssignments();
-    print(userNumber);
+    print(USER_ID);
   }
 
   Future<void> getAssignments() async {

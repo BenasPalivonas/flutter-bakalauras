@@ -49,8 +49,7 @@
         "title": "Assignments",
         "not_completed": "Not completed",
         "completed": "Completed",
-        "mark_as_not_completed": "Mark as not completed",
-        "mark_as_completed": "Mark as completed"
+        "delete": "Delete"
     },
     "current_locale": {
         "locale": "en"
