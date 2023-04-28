@@ -196,7 +196,7 @@ class Lecture {
   final String id;
   final Subject subject;
   final String time;
-  final String venue;
+  final Venue venue;
   final Lecturer? lecturer;
   final List<dynamic> studentGroups;
   final Weekday weekday;
@@ -216,7 +216,7 @@ class Lecture {
       id: json['id'].toString(),
       subject: Subject.fromJson(json['subject']),
       time: json['time'],
-      venue: json['venue'],
+      venue: Venue.fromJson(json['venue']),
       studentGroups: (json['student_groups']
           .map((group) => StudentGroup.fromJson(group))
           .toList()),
@@ -240,6 +240,22 @@ class StudentGroup {
 
   factory StudentGroup.fromJson(Map<String, dynamic> json) {
     return StudentGroup(
+      id: json['id'].toString(),
+      name: json['name'],
+    );
+  }
+}
+
+class Venue {
+  final String id;
+  final String name;
+  Venue({
+    required this.id,
+    required this.name,
+  });
+
+  factory Venue.fromJson(Map<String, dynamic> json) {
+    return Venue(
       id: json['id'].toString(),
       name: json['name'],
     );
@@ -278,8 +294,9 @@ class Assignment {
   final DateTime date;
   final String details;
   final bool completed;
-  final Lecturer? lecturer;
-  final Student? student;
+  final Venue? venue;
+  final Lecturer? created_by_lecturer;
+  final Student? created_by_student;
   final String? student_id;
 
   Assignment({
@@ -288,8 +305,9 @@ class Assignment {
     required this.subject,
     required this.date,
     required this.details,
-    this.lecturer,
-    this.student,
+    this.created_by_lecturer,
+    this.venue,
+    this.created_by_student,
     this.student_id,
     required this.completed,
   });
@@ -297,7 +315,7 @@ class Assignment {
   Map<String, dynamic> toJson() => {
         'name': name,
         'subject_id': subject.id,
-        'student_id': student_id,
+        'student_id': created_by_student,
         'due_date': date.toIso8601String(),
         'details': details,
         'completed': completed,
@@ -311,10 +329,13 @@ class Assignment {
       date: DateTime.parse(json['due_date']),
       details: json['details'],
       completed: json['completed'],
-      lecturer:
-          json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
-      student:
-          json['student'] == null ? null : Student.fromJson(json['student']),
+      venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
+      created_by_lecturer: json['created_by_lecturer'] == null
+          ? null
+          : Lecturer.fromJson(json['created_by_lecturer']),
+      created_by_student: json['created_by_student'] == null
+          ? null
+          : Student.fromJson(json['created_by_student']),
     );
   }
 
@@ -331,8 +352,15 @@ class Assignment {
               Text('${translate('modal.name')} ${name}'),
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${subject.name}'),
-              SizedBox(height: 8),
-              Text('${translate('modal.lecturer')} ${lecturer?.name}'),
+              SizedBox(height: created_by_lecturer == null ? 0 : 8),
+              created_by_lecturer == null
+                  ? Text('')
+                  : Text(
+                      '${translate('modal.lecturer')} ${created_by_lecturer?.name}'),
+              SizedBox(height: venue == null ? 0 : 8),
+              venue == null
+                  ? Text('')
+                  : Text("${translate('subtitles.venue')}: ${venue?.name}"),
               SizedBox(height: 8),
               Text('${translate('modal.additional_details')} ',
                   style: TextStyle(fontWeight: FontWeight.bold)),

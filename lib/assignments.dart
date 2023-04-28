@@ -147,11 +147,16 @@ class _TodoListState extends State<ClickableList> {
               Text('${translate('modal.name')} ${item.name}'),
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${item.subject.name}'),
-              SizedBox(height: 8),
-              item.lecturer == null
+              SizedBox(height: item.created_by_lecturer == null ? 0 : 8),
+              item.created_by_lecturer == null
                   ? Text('')
                   : Text(
-                      '${translate('modal.lecturer')} ${item.lecturer?.name}'),
+                      '${translate('modal.lecturer')} ${item.created_by_lecturer?.name}'),
+              SizedBox(height: item.venue == null ? 0 : 8),
+              item.venue == null
+                  ? Text('')
+                  : Text(
+                      "${translate('subtitles.venue')}: ${item.venue?.name}"),
               SizedBox(height: 8),
               Text(
                   '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
@@ -188,7 +193,7 @@ class _TodoListState extends State<ClickableList> {
               date: assignment.date,
               details: assignment.details,
               completed: setCompleted,
-              lecturer: assignment.lecturer,
+              created_by_lecturer: assignment.created_by_lecturer,
             );
           } else {
             return assignment;
@@ -377,9 +382,9 @@ class _TodoListState extends State<ClickableList> {
                       shrinkWrap: true,
                       children: _items
                           .where((item) => item.completed == this._completed)
-                          .where((item) => item?.student == null
+                          .where((item) => item?.created_by_lecturer == null
                               ? true
-                              : item.student?.id == USER_ID)
+                              : item.created_by_lecturer?.id == USER_ID)
                           .map((item) {
                         return ListTile(
                           title: Text(item.name),
@@ -390,7 +395,7 @@ class _TodoListState extends State<ClickableList> {
                             _showDetails(item);
                           },
                           trailing: item.student_id != null ||
-                                  item.student?.id != null
+                                  item.created_by_lecturer?.id != null
                               ? PopupMenuButton(
                                   itemBuilder: (BuildContext context) {
                                     return [
