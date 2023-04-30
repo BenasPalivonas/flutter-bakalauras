@@ -205,162 +205,162 @@ class _TodoListState extends State<ClickableList> {
     }
   }
 
-  void _deleteItem(Assignment item) {
-    setState(() {
-      _originalItems.remove(item);
-    });
-  }
+  // void _deleteItem(Assignment item) {
+  //   setState(() {
+  //     _originalItems.remove(item);
+  //   });
+  // }
 
-  Future<Assignment?> createAssignment(BuildContext context) async {
-    String name = '';
-    DateTime selectedDate = DateTime.now();
-    String details = '';
-    bool completed = false;
-    Lecturer? selectedLecturer;
-    Subject? selectedSubject;
-    bool isLoading = true;
-    List<Subject> subjects = [];
-    Assignment? createdAssignment = null;
-    Completer<Assignment?> completer = Completer();
+  // Future<Assignment?> createAssignment(BuildContext context) async {
+  //   String name = '';
+  //   DateTime selectedDate = DateTime.now();
+  //   String details = '';
+  //   bool completed = false;
+  //   Lecturer? selectedLecturer;
+  //   Subject? selectedSubject;
+  //   bool isLoading = true;
+  //   List<Subject> subjects = [];
+  //   Assignment? createdAssignment = null;
+  //   Completer<Assignment?> completer = Completer();
 
-    try {
-      var responseSubjects = (await ApiService().getSubjects())!;
-      setState(() {
-        subjects = responseSubjects;
-      });
-    } catch (e) {
-      log(e.toString());
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  //   try {
+  //     var responseSubjects = (await ApiService().getSubjects())!;
+  //     setState(() {
+  //       subjects = responseSubjects;
+  //     });
+  //   } catch (e) {
+  //     log(e.toString());
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
 
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                              labelText: translate('dropdown.name')),
-                          onChanged: (value) => setState(() => name = value),
-                        ),
-                        DropdownButton<Subject>(
-                          value: selectedSubject,
-                          hint: Text(translate('dropdown.subject')),
-                          onChanged: isLoading
-                              ? null
-                              : (value) =>
-                                  setState(() => selectedSubject = value),
-                          items: subjects
-                              .map((l) => DropdownMenuItem<Subject>(
-                                    value: l,
-                                    child: Text(l.name),
-                                  ))
-                              .toList(),
-                        ),
-                        SizedBox(height: 16.0),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                translate('dropdown.select_date_time'),
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black.withOpacity(0.6)),
-                              ),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () async {
-                                  final currentDate = DateTime.now();
-                                  final pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    firstDate: currentDate,
-                                    lastDate: DateTime(currentDate.year + 1),
-                                  );
+  //   showModalBottomSheet(
+  //       context: context,
+  //       isScrollControlled: true,
+  //       builder: (BuildContext context) {
+  //         return StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setState) {
+  //             return Padding(
+  //               padding: EdgeInsets.only(
+  //                 bottom: MediaQuery.of(context).viewInsets.bottom,
+  //               ),
+  //               child: SingleChildScrollView(
+  //                 child: Container(
+  //                   padding: EdgeInsets.all(16.0),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       TextField(
+  //                         decoration: InputDecoration(
+  //                             labelText: translate('dropdown.name')),
+  //                         onChanged: (value) => setState(() => name = value),
+  //                       ),
+  //                       DropdownButton<Subject>(
+  //                         value: selectedSubject,
+  //                         hint: Text(translate('dropdown.subject')),
+  //                         onChanged: isLoading
+  //                             ? null
+  //                             : (value) =>
+  //                                 setState(() => selectedSubject = value),
+  //                         items: subjects
+  //                             .map((l) => DropdownMenuItem<Subject>(
+  //                                   value: l,
+  //                                   child: Text(l.name),
+  //                                 ))
+  //                             .toList(),
+  //                       ),
+  //                       SizedBox(height: 16.0),
+  //                       Row(
+  //                         children: [
+  //                           Expanded(
+  //                             child: Text(
+  //                               translate('dropdown.select_date_time'),
+  //                               style: TextStyle(
+  //                                   fontSize: 16.0,
+  //                                   color: Colors.black.withOpacity(0.6)),
+  //                             ),
+  //                           ),
+  //                           Expanded(
+  //                             child: TextButton(
+  //                               onPressed: () async {
+  //                                 final currentDate = DateTime.now();
+  //                                 final pickedDate = await showDatePicker(
+  //                                   context: context,
+  //                                   initialDate: selectedDate,
+  //                                   firstDate: currentDate,
+  //                                   lastDate: DateTime(currentDate.year + 1),
+  //                                 );
 
-                                  if (pickedDate != null) {
-                                    final pickedTime = await showTimePicker(
-                                      context: context,
-                                      initialTime:
-                                          TimeOfDay.fromDateTime(selectedDate),
-                                    );
+  //                                 if (pickedDate != null) {
+  //                                   final pickedTime = await showTimePicker(
+  //                                     context: context,
+  //                                     initialTime:
+  //                                         TimeOfDay.fromDateTime(selectedDate),
+  //                                   );
 
-                                    if (pickedTime != null) {
-                                      setState(() {
-                                        selectedDate = DateTime(
-                                          pickedDate.year,
-                                          pickedDate.month,
-                                          pickedDate.day,
-                                          pickedTime.hour,
-                                          pickedTime.minute,
-                                        );
-                                      });
-                                    }
-                                  }
-                                },
-                                child: Text(
-                                  '${translate('dropdown.date')} ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                              labelText: translate('dropdown.details')),
-                          onChanged: (value) => setState(() => details = value),
-                        ),
-                        SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () async {
-                            createdAssignment = Assignment(
-                                name: name,
-                                subject: selectedSubject!,
-                                date: selectedDate,
-                                details: details,
-                                completed: completed,
-                                student_id: USER_ID);
-                            // TODO: Save the assignment
+  //                                   if (pickedTime != null) {
+  //                                     setState(() {
+  //                                       selectedDate = DateTime(
+  //                                         pickedDate.year,
+  //                                         pickedDate.month,
+  //                                         pickedDate.day,
+  //                                         pickedTime.hour,
+  //                                         pickedTime.minute,
+  //                                       );
+  //                                     });
+  //                                   }
+  //                                 }
+  //                               },
+  //                               child: Text(
+  //                                 '${translate('dropdown.date')} ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
+  //                                 style: TextStyle(fontSize: 16.0),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       TextField(
+  //                         decoration: InputDecoration(
+  //                             labelText: translate('dropdown.details')),
+  //                         onChanged: (value) => setState(() => details = value),
+  //                       ),
+  //                       SizedBox(height: 16.0),
+  //                       ElevatedButton(
+  //                         onPressed: () async {
+  //                           createdAssignment = Assignment(
+  //                               name: name,
+  //                               subject: selectedSubject!,
+  //                               date: selectedDate,
+  //                               details: details,
+  //                               completed: completed,
+  //                               student_id: USER_ID);
+  //                           // TODO: Save the assignment
 
-                            try {
-                              await ApiService()
-                                  .createAssignment(createdAssignment!);
-                              Navigator.pop(context, createdAssignment);
-                              completer.complete(createdAssignment);
-                            } catch (e) {
-                              log(e.toString());
-                              completer.complete(null);
-                            }
-                          },
-                          child: Text(translate('dropdown.create')),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        });
-    return completer.future;
-  }
+  //                           try {
+  //                             await ApiService()
+  //                                 .createAssignment(createdAssignment!);
+  //                             Navigator.pop(context, createdAssignment);
+  //                             completer.complete(createdAssignment);
+  //                           } catch (e) {
+  //                             log(e.toString());
+  //                             completer.complete(null);
+  //                           }
+  //                         },
+  //                         child: Text(translate('dropdown.create')),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         );
+  //       });
+  //   return completer.future;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -394,45 +394,45 @@ class _TodoListState extends State<ClickableList> {
                           onTap: () {
                             _showDetails(item);
                           },
-                          trailing: item.student_id != null ||
-                                  item.created_by_lecturer?.id != null
-                              ? PopupMenuButton(
-                                  itemBuilder: (BuildContext context) {
-                                    return [
-                                      PopupMenuItem(
-                                        child: Text(
-                                            translate('assignments.delete')),
-                                        value: 'delete',
-                                      ),
-                                    ];
-                                  },
-                                  onSelected: (value) async {
-                                    if (value == 'delete') {
-                                      var id = item.id ??
-                                          _originalItems
-                                              .firstWhere(
-                                                  (i) => i.name == item.name)
-                                              .id;
+                          // trailing: item.student_id != null ||
+                          //         item.created_by_lecturer?.id != null
+                          //     ? PopupMenuButton(
+                          //         itemBuilder: (BuildContext context) {
+                          //           return [
+                          //             PopupMenuItem(
+                          //               child: Text(
+                          //                   translate('assignments.delete')),
+                          //               value: 'delete',
+                          //             ),
+                          //           ];
+                          //         },
+                          //         onSelected: (value) async {
+                          //           if (value == 'delete') {
+                          //             var id = item.id ??
+                          //                 _originalItems
+                          //                     .firstWhere(
+                          //                         (i) => i.name == item.name)
+                          //                     .id;
 
-                                      inspect(id);
-                                      var response;
-                                      try {
-                                        response = await ApiService()
-                                            .deleteAssignment(id!);
-                                      } catch (e) {
-                                        response = true;
-                                      }
+                          //             inspect(id);
+                          //             var response;
+                          //             try {
+                          //               response = await ApiService()
+                          //                   .deleteAssignment(id!);
+                          //             } catch (e) {
+                          //               response = true;
+                          //             }
 
-                                      if (response == true) {
-                                        _deleteItem(item);
-                                      } else {
-                                        _showSnackbar(
-                                            context, "Failed to delete item");
-                                      }
-                                    }
-                                  },
-                                )
-                              : null,
+                          //             if (response == true) {
+                          //               _deleteItem(item);
+                          //             } else {
+                          //               _showSnackbar(
+                          //                   context, "Failed to delete item");
+                          //             }
+                          //           }
+                          //         },
+                          //       )
+                          //     : null
                         );
                       }).toList(),
                     ),
@@ -442,21 +442,21 @@ class _TodoListState extends State<ClickableList> {
             ),
             floatingActionButton:
                 Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () async {
-                  var response = (await createAssignment(context));
-                  if (response != null) {
-                    setState(() {
-                      _originalItems.add(response);
-                    });
-                  }
-                },
-                heroTag: null,
-              ),
-              SizedBox(
-                height: 10,
-              ),
+              // FloatingActionButton(
+              //   child: Icon(Icons.add),
+              //   onPressed: () async {
+              //     var response = (await createAssignment(context));
+              //     if (response != null) {
+              //       setState(() {
+              //         _originalItems.add(response);
+              //       });
+              //     }
+              //   },
+              //   heroTag: null,
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
               FloatingActionButton(
                 child: Icon(Icons.search),
                 backgroundColor:
