@@ -147,11 +147,11 @@ class _TodoListState extends State<ClickableList> {
               Text('${translate('modal.name')} ${item.name}'),
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${item.subject.name}'),
-              SizedBox(height: item.created_by_lecturer == null ? 0 : 8),
-              item.created_by_lecturer == null
+              SizedBox(height: item.lecturer == null ? 0 : 8),
+              item.lecturer == null
                   ? Text('')
                   : Text(
-                      '${translate('modal.lecturer')} ${item.created_by_lecturer?.name}'),
+                      '${translate('modal.lecturer')} ${item.lecturer?.name}'),
               SizedBox(height: item.venue == null ? 0 : 8),
               item.venue == null
                   ? Text('')
@@ -193,7 +193,7 @@ class _TodoListState extends State<ClickableList> {
               date: assignment.date,
               details: assignment.details,
               completed: setCompleted,
-              created_by_lecturer: assignment.created_by_lecturer,
+              lecturer: assignment.lecturer,
             );
           } else {
             return assignment;
@@ -382,9 +382,9 @@ class _TodoListState extends State<ClickableList> {
                       shrinkWrap: true,
                       children: _items
                           .where((item) => item.completed == this._completed)
-                          .where((item) => item?.created_by_lecturer == null
+                          .where((item) => item?.lecturer == null
                               ? true
-                              : item.created_by_lecturer?.id == USER_ID)
+                              : item.lecturer?.id == USER_ID)
                           .map((item) {
                         return ListTile(
                           title: Text(item.name),
@@ -395,7 +395,7 @@ class _TodoListState extends State<ClickableList> {
                             _showDetails(item);
                           },
                           // trailing: item.student_id != null ||
-                          //         item.created_by_lecturer?.id != null
+                          //         item.lecturer?.id != null
                           //     ? PopupMenuButton(
                           //         itemBuilder: (BuildContext context) {
                           //           return [

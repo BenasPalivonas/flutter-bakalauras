@@ -295,9 +295,8 @@ class Assignment {
   final String details;
   final bool completed;
   final Venue? venue;
-  final Lecturer? created_by_lecturer;
-  final Student? created_by_student;
-  final String? student_id;
+  final Lecturer? lecturer;
+  // final String? student_id;
 
   Assignment({
     this.id,
@@ -305,17 +304,16 @@ class Assignment {
     required this.subject,
     required this.date,
     required this.details,
-    this.created_by_lecturer,
+    this.lecturer,
     this.venue,
-    this.created_by_student,
-    this.student_id,
+    // this.student_id,
     required this.completed,
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'subject_id': subject.id,
-        'student_id': created_by_student,
+        // 'student_id': student_id,
         'due_date': date.toIso8601String(),
         'details': details,
         'completed': completed,
@@ -330,12 +328,8 @@ class Assignment {
       details: json['details'],
       completed: json['completed'],
       venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
-      created_by_lecturer: json['created_by_lecturer'] == null
-          ? null
-          : Lecturer.fromJson(json['created_by_lecturer']),
-      created_by_student: json['created_by_student'] == null
-          ? null
-          : Student.fromJson(json['created_by_student']),
+      lecturer:
+          json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
     );
   }
 
@@ -352,11 +346,10 @@ class Assignment {
               Text('${translate('modal.name')} ${name}'),
               SizedBox(height: 8),
               Text('${translate('modal.subject')} ${subject.name}'),
-              SizedBox(height: created_by_lecturer == null ? 0 : 8),
-              created_by_lecturer == null
+              SizedBox(height: lecturer == null ? 0 : 8),
+              lecturer == null
                   ? Text('')
-                  : Text(
-                      '${translate('modal.lecturer')} ${created_by_lecturer?.name}'),
+                  : Text('${translate('modal.lecturer')} ${lecturer?.name}'),
               SizedBox(height: venue == null ? 0 : 8),
               venue == null
                   ? Text('')
