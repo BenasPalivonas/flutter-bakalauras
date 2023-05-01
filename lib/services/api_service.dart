@@ -122,7 +122,6 @@ class ApiService {
   Future<bool> deleteAssignment(String id) async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + "/");
-    print(url);
     final response = await http.delete(url, headers: headers);
     if (response.statusCode == 204) {
       return true;
@@ -300,19 +299,33 @@ class Student {
   }
 }
 
+class Grade {
+  final String id;
+  final Student student;
+
+  Grade({required this.id, required this.student});
+
+  factory Grade.fromJson(Map<String, dynamic> json) {
+    return Grade(
+      id: json['id'].toString(),
+      student: Student.fromJson(json['student']),
+    );
+  }
+}
+
 class Assignment {
-  final String? id;
+  final String id;
   final String name;
   final Subject subject;
   final DateTime date;
   final String details;
-  final bool completed;
   final Venue? venue;
   final Lecturer? lecturer;
   final List<dynamic> studentGroups;
+  final List<dynamic> grades;
 
   Assignment({
-    this.id,
+    required this.id,
     required this.name,
     required this.subject,
     required this.date,
@@ -320,7 +333,7 @@ class Assignment {
     this.lecturer,
     this.venue,
     required this.studentGroups,
-    required this.completed,
+    required this.grades,
   });
 
   Map<String, dynamic> toJson() => {
@@ -328,24 +341,23 @@ class Assignment {
         'subject_id': subject.id,
         'due_date': date.toIso8601String(),
         'details': details,
-        'completed': completed,
       };
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
-        id: json['id'].toString(),
-        name: json['name'],
-        subject: Subject.fromJson(json['subject']),
-        date: DateTime.parse(json['due_date']),
-        details: json['details'],
-        completed: json['completed'],
-        venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
-        lecturer: json['lecturer'] == null
-            ? null
-            : Lecturer.fromJson(json['lecturer']),
-        studentGroups: (json['student_groups']
-            .map((group) => StudentGroup.fromJson(group))
-            .toList()));
+      id: json['id'].toString(),
+      name: json['name'],
+      subject: Subject.fromJson(json['subject']),
+      date: DateTime.parse(json['due_date']),
+      details: json['details'],
+      venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
+      lecturer:
+          json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
+      studentGroups: (json['student_groups']
+          .map((group) => StudentGroup.fromJson(group))
+          .toList()),
+      grades: (json['grades'].map((grade) => Grade.fromJson(grade)).toList()),
+    );
   }
 
   void showDetails(BuildContext context) {
