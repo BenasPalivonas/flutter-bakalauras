@@ -7,8 +7,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ui/services/api_service.dart';
 
-String filteredBy = '';
-
 class MyListScreen extends StatefulWidget {
   @override
   _MyListScreenState createState() => _MyListScreenState();
@@ -84,29 +82,32 @@ class _TodoListState extends State<ClickableList> {
   bool _completed = false;
   bool isLoading = false;
   List<Assignment> _items = [];
-  List<Assignment> _originalItems = [];
-  String _filteredBy = filteredBy;
+  List<Assignment> _filteredItems = [];
+
+  void _filterLecturers(String searchQuery) {
+    setState(() {
+      _filteredItems = _items
+          .where((assignment) =>
+              assignment.name
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              assignment.subject.name
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              assignment.details
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
+          .toList();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     getAssignments();
     _completed = widget.completed;
-    _originalItems = _items;
-    _filteredBy = filteredBy;
-    print(filteredBy == translate('filter.show_all'));
-    if (filteredBy.isNotEmpty) {
-      setState(() => {
-            if (filteredBy == translate('filter.show_all'))
-              {_items = _originalItems}
-            else
-              {
-                _items = _originalItems
-                    .where((element) => element.subject.name == filteredBy)
-                    .toList()
-              }
-          });
-    }
+
+    setState(() => {_filteredItems = _items});
   }
 
   Future<void> getAssignments() async {
@@ -116,14 +117,8 @@ class _TodoListState extends State<ClickableList> {
     try {
       var response = (await ApiService().getAssignments())!;
       setState(() {
-        if (filteredBy.isNotEmpty) {
-          _items = response
-              .where((element) => element.subject.name == filteredBy)
-              .toList();
-        } else {
-          _items = response;
-        }
-        _originalItems = response;
+        _items = response;
+        _filteredItems = response;
       });
     } catch (e) {
       log(e.toString());
@@ -179,189 +174,6 @@ class _TodoListState extends State<ClickableList> {
     );
   }
 
-  // Future<void> _toggleItemCompletion(Assignment item) async {
-  //   try {
-  //     bool setCompleted = !item.completed;
-  //     await ApiService().updateAssignment(item.id!, setCompleted);
-  //     setState(() {
-  //       _items = _items.map((assignment) {
-  //         if (assignment.id == item.id) {
-  //           return Assignment(
-  //             id: assignment.id,
-  //             name: assignment.name,
-  //             subject: assignment.subject,
-  //             date: assignment.date,
-  //             details: assignment.details,
-  //             completed: setCompleted,
-  //             lecturer: assignment.lecturer,
-  //           );
-  //         } else {
-  //           return assignment;
-  //         }
-  //       }).toList();
-  //     });
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
-
-  // void _deleteItem(Assignment item) {
-  //   setState(() {
-  //     _originalItems.remove(item);
-  //   });
-  // }
-
-  // Future<Assignment?> createAssignment(BuildContext context) async {
-  //   String name = '';
-  //   DateTime selectedDate = DateTime.now();
-  //   String details = '';
-  //   bool completed = false;
-  //   Lecturer? selectedLecturer;
-  //   Subject? selectedSubject;
-  //   bool isLoading = true;
-  //   List<Subject> subjects = [];
-  //   Assignment? createdAssignment = null;
-  //   Completer<Assignment?> completer = Completer();
-
-  //   try {
-  //     var responseSubjects = (await ApiService().getSubjects())!;
-  //     setState(() {
-  //       subjects = responseSubjects;
-  //     });
-  //   } catch (e) {
-  //     log(e.toString());
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-
-  //   showModalBottomSheet(
-  //       context: context,
-  //       isScrollControlled: true,
-  //       builder: (BuildContext context) {
-  //         return StatefulBuilder(
-  //           builder: (BuildContext context, StateSetter setState) {
-  //             return Padding(
-  //               padding: EdgeInsets.only(
-  //                 bottom: MediaQuery.of(context).viewInsets.bottom,
-  //               ),
-  //               child: SingleChildScrollView(
-  //                 child: Container(
-  //                   padding: EdgeInsets.all(16.0),
-  //                   child: Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.stretch,
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: [
-  //                       TextField(
-  //                         decoration: InputDecoration(
-  //                             labelText: translate('dropdown.name')),
-  //                         onChanged: (value) => setState(() => name = value),
-  //                       ),
-  //                       DropdownButton<Subject>(
-  //                         value: selectedSubject,
-  //                         hint: Text(translate('dropdown.subject')),
-  //                         onChanged: isLoading
-  //                             ? null
-  //                             : (value) =>
-  //                                 setState(() => selectedSubject = value),
-  //                         items: subjects
-  //                             .map((l) => DropdownMenuItem<Subject>(
-  //                                   value: l,
-  //                                   child: Text(l.name),
-  //                                 ))
-  //                             .toList(),
-  //                       ),
-  //                       SizedBox(height: 16.0),
-  //                       Row(
-  //                         children: [
-  //                           Expanded(
-  //                             child: Text(
-  //                               translate('dropdown.select_date_time'),
-  //                               style: TextStyle(
-  //                                   fontSize: 16.0,
-  //                                   color: Colors.black.withOpacity(0.6)),
-  //                             ),
-  //                           ),
-  //                           Expanded(
-  //                             child: TextButton(
-  //                               onPressed: () async {
-  //                                 final currentDate = DateTime.now();
-  //                                 final pickedDate = await showDatePicker(
-  //                                   context: context,
-  //                                   initialDate: selectedDate,
-  //                                   firstDate: currentDate,
-  //                                   lastDate: DateTime(currentDate.year + 1),
-  //                                 );
-
-  //                                 if (pickedDate != null) {
-  //                                   final pickedTime = await showTimePicker(
-  //                                     context: context,
-  //                                     initialTime:
-  //                                         TimeOfDay.fromDateTime(selectedDate),
-  //                                   );
-
-  //                                   if (pickedTime != null) {
-  //                                     setState(() {
-  //                                       selectedDate = DateTime(
-  //                                         pickedDate.year,
-  //                                         pickedDate.month,
-  //                                         pickedDate.day,
-  //                                         pickedTime.hour,
-  //                                         pickedTime.minute,
-  //                                       );
-  //                                     });
-  //                                   }
-  //                                 }
-  //                               },
-  //                               child: Text(
-  //                                 '${translate('dropdown.date')} ${DateFormat('dd/MM/yyyy HH:mm').format(selectedDate)}',
-  //                                 style: TextStyle(fontSize: 16.0),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                       TextField(
-  //                         decoration: InputDecoration(
-  //                             labelText: translate('dropdown.details')),
-  //                         onChanged: (value) => setState(() => details = value),
-  //                       ),
-  //                       SizedBox(height: 16.0),
-  //                       ElevatedButton(
-  //                         onPressed: () async {
-  //                           createdAssignment = Assignment(
-  //                               name: name,
-  //                               subject: selectedSubject!,
-  //                               date: selectedDate,
-  //                               details: details,
-  //                               completed: completed,
-  //                               student_id: USER_ID);
-  //                           // TODO: Save the assignment
-
-  //                           try {
-  //                             await ApiService()
-  //                                 .createAssignment(createdAssignment!);
-  //                             Navigator.pop(context, createdAssignment);
-  //                             completer.complete(createdAssignment);
-  //                           } catch (e) {
-  //                             log(e.toString());
-  //                             completer.complete(null);
-  //                           }
-  //                         },
-  //                         child: Text(translate('dropdown.create')),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         );
-  //       });
-  //   return completer.future;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -372,15 +184,23 @@ class _TodoListState extends State<ClickableList> {
           )
         : Scaffold(
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 30.0),
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: translate('contacts.search_lecturers'),
+                        ),
+                        onChanged: _filterLecturers,
+                      )),
                   Expanded(
                       child: Scrollbar(
                     child: ListView(
                       shrinkWrap: true,
-                      children: _items
+                      children: _filteredItems
                           .where((item) => item.completed == this._completed)
                           .where((item) => item?.lecturer == null
                               ? true
@@ -394,45 +214,6 @@ class _TodoListState extends State<ClickableList> {
                           onTap: () {
                             _showDetails(item);
                           },
-                          // trailing: item.student_id != null ||
-                          //         item.lecturer?.id != null
-                          //     ? PopupMenuButton(
-                          //         itemBuilder: (BuildContext context) {
-                          //           return [
-                          //             PopupMenuItem(
-                          //               child: Text(
-                          //                   translate('assignments.delete')),
-                          //               value: 'delete',
-                          //             ),
-                          //           ];
-                          //         },
-                          //         onSelected: (value) async {
-                          //           if (value == 'delete') {
-                          //             var id = item.id ??
-                          //                 _originalItems
-                          //                     .firstWhere(
-                          //                         (i) => i.name == item.name)
-                          //                     .id;
-
-                          //             inspect(id);
-                          //             var response;
-                          //             try {
-                          //               response = await ApiService()
-                          //                   .deleteAssignment(id!);
-                          //             } catch (e) {
-                          //               response = true;
-                          //             }
-
-                          //             if (response == true) {
-                          //               _deleteItem(item);
-                          //             } else {
-                          //               _showSnackbar(
-                          //                   context, "Failed to delete item");
-                          //             }
-                          //           }
-                          //         },
-                          //       )
-                          //     : null
                         );
                       }).toList(),
                     ),
@@ -440,60 +221,7 @@ class _TodoListState extends State<ClickableList> {
                 ],
               ),
             ),
-            floatingActionButton:
-                Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              // FloatingActionButton(
-              //   child: Icon(Icons.add),
-              //   onPressed: () async {
-              //     var response = (await createAssignment(context));
-              //     if (response != null) {
-              //       setState(() {
-              //         _originalItems.add(response);
-              //       });
-              //     }
-              //   },
-              //   heroTag: null,
-              // ),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              FloatingActionButton(
-                child: Icon(Icons.search),
-                backgroundColor:
-                    _filteredBy.isEmpty ? Colors.blue : Colors.green,
-                onPressed: () =>
-                    _openSubjectSelector(context, _filteredBy).then((value) {
-                  if (value == translate('filter.show_all')) {}
-                  setState(() => {
-                        if (value != null)
-                          {
-                            if (value == translate('filter.show_all'))
-                              {_items = _originalItems}
-                            else
-                              {
-                                _items = _originalItems
-                                    .where((element) =>
-                                        element.subject.name == value)
-                                    .toList()
-                              }
-                          }
-                      });
-                  setState(() {
-                    if (value != null) {
-                      if (value == translate('filter.show_all')) {
-                        _filteredBy = '';
-                        filteredBy = '';
-                      } else {
-                        _filteredBy = value;
-                        filteredBy = value;
-                      }
-                    }
-                  });
-                  return value;
-                }),
-                heroTag: null,
-              ),
-            ]));
+          );
   }
 }
 

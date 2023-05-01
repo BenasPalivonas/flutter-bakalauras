@@ -37,11 +37,12 @@ void main() async {
         print(e);
       }
     }
-    if (!assignment!.studentGroups
-        .any((element) => element.name == USER_GROUP)) {
-      return;
-    }
+
     try {
+      if (!assignment!.studentGroups
+          .any((element) => element.name == USER_GROUP)) {
+        return;
+      }
       LocalNotificationService.showNotificationOnForeground(message);
       print('sent');
     } catch (e) {
