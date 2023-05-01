@@ -110,6 +110,10 @@ class _TodoListState extends State<ClickableList> {
     setState(() => {_filteredItems = _items});
   }
 
+  bool checkIfGraded(Grade grade, bool completed) {
+    return grade.student.username.toString() == USER_NUMBER;
+  }
+
   Future<void> getAssignments() async {
     setState(() {
       isLoading = true;
@@ -117,8 +121,13 @@ class _TodoListState extends State<ClickableList> {
     try {
       var response = (await ApiService().getAssignments())!;
       setState(() {
-        _items = response;
-        _filteredItems = response;
+        _items = response
+            .where((item) => _completed == true
+                ? item.grades.any((grade) => checkIfGraded(grade, _completed))
+                : !item.grades.any((grade) => checkIfGraded(grade, _completed)))
+            .toList();
+
+        _filteredItems = _items;
       });
     } catch (e) {
       log(e.toString());
@@ -155,12 +164,7 @@ class _TodoListState extends State<ClickableList> {
                       child: Scrollbar(
                     child: ListView(
                       shrinkWrap: true,
-                      children: _filteredItems
-                          .where((item) => item.completed == this._completed)
-                          .where((item) => item?.lecturer == null
-                              ? true
-                              : item.lecturer?.id == USER_ID)
-                          .map((item) {
+                      children: _filteredItems.map((item) {
                         return ListTile(
                           title: Text(item.name),
                           subtitle: Text(
