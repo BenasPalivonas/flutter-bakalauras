@@ -27,9 +27,26 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   LocalNotificationService.initilize();
   getRegistrationId();
-  FirebaseMessaging.onMessage.listen((message) {
-    inspect(message);
-    LocalNotificationService.showNotificationOnForeground(message);
+  FirebaseMessaging.onMessage.listen((message) async {
+    Assignment? assignment = null;
+    if (USER_GROUP.isNotEmpty) {
+      try {
+        String id = message.data['id'];
+        assignment = (await ApiService().getAssignment(id))!;
+      } catch (e) {
+        print(e);
+      }
+    }
+    if (!assignment!.studentGroups
+        .any((element) => element.name == USER_GROUP)) {
+      return;
+    }
+    try {
+      LocalNotificationService.showNotificationOnForeground(message);
+      print('sent');
+    } catch (e) {
+      print('Error parsing JSON: $e');
+    }
   });
   runApp(LocalizedApp(delegate, MyApp()));
 }

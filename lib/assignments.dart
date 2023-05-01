@@ -179,31 +179,31 @@ class _TodoListState extends State<ClickableList> {
     );
   }
 
-  Future<void> _toggleItemCompletion(Assignment item) async {
-    try {
-      bool setCompleted = !item.completed;
-      await ApiService().updateAssignment(item.id!, setCompleted);
-      setState(() {
-        _items = _items.map((assignment) {
-          if (assignment.id == item.id) {
-            return Assignment(
-              id: assignment.id,
-              name: assignment.name,
-              subject: assignment.subject,
-              date: assignment.date,
-              details: assignment.details,
-              completed: setCompleted,
-              lecturer: assignment.lecturer,
-            );
-          } else {
-            return assignment;
-          }
-        }).toList();
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  // Future<void> _toggleItemCompletion(Assignment item) async {
+  //   try {
+  //     bool setCompleted = !item.completed;
+  //     await ApiService().updateAssignment(item.id!, setCompleted);
+  //     setState(() {
+  //       _items = _items.map((assignment) {
+  //         if (assignment.id == item.id) {
+  //           return Assignment(
+  //             id: assignment.id,
+  //             name: assignment.name,
+  //             subject: assignment.subject,
+  //             date: assignment.date,
+  //             details: assignment.details,
+  //             completed: setCompleted,
+  //             lecturer: assignment.lecturer,
+  //           );
+  //         } else {
+  //           return assignment;
+  //         }
+  //       }).toList();
+  //     });
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   // void _deleteItem(Assignment item) {
   //   setState(() {

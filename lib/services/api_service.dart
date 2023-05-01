@@ -72,6 +72,20 @@ class ApiService {
     }
   }
 
+  Future<Assignment?> getAssignment(String id) async {
+    try {
+      var url =
+          Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + "/");
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body) as dynamic;
+        return Assignment.fromJson(data);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> updateAssignment(String id, bool completed) async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + '/');
@@ -110,7 +124,6 @@ class ApiService {
         Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + "/");
     print(url);
     final response = await http.delete(url, headers: headers);
-    inspect(response);
     if (response.statusCode == 204) {
       return true;
     } else {
@@ -198,7 +211,7 @@ class Lecture {
   final String time;
   final Venue venue;
   final Lecturer? lecturer;
-  final List<dynamic> studentGroups;
+  final List<StudentGroup> studentGroups;
   final Weekday weekday;
 
   Lecture({
@@ -296,6 +309,8 @@ class Assignment {
   final bool completed;
   final Venue? venue;
   final Lecturer? lecturer;
+  final List<dynamic> studentGroups;
+
   // final String? student_id;
 
   Assignment({
@@ -306,6 +321,8 @@ class Assignment {
     required this.details,
     this.lecturer,
     this.venue,
+    required this.studentGroups,
+
     // this.student_id,
     required this.completed,
   });
@@ -321,16 +338,19 @@ class Assignment {
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
-      id: json['id'].toString(),
-      name: json['name'],
-      subject: Subject.fromJson(json['subject']),
-      date: DateTime.parse(json['due_date']),
-      details: json['details'],
-      completed: json['completed'],
-      venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
-      lecturer:
-          json['lecturer'] == null ? null : Lecturer.fromJson(json['lecturer']),
-    );
+        id: json['id'].toString(),
+        name: json['name'],
+        subject: Subject.fromJson(json['subject']),
+        date: DateTime.parse(json['due_date']),
+        details: json['details'],
+        completed: json['completed'],
+        venue: json['venue'] == null ? null : Venue.fromJson(json['venue']),
+        lecturer: json['lecturer'] == null
+            ? null
+            : Lecturer.fromJson(json['lecturer']),
+        studentGroups: (json['student_groups']
+            .map((group) => StudentGroup.fromJson(group))
+            .toList()));
   }
 
   void showDetails(BuildContext context) {
