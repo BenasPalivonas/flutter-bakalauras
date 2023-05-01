@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui/services/api_service.dart';
+import 'package:ui/services/local_notifications.dart';
 
 import 'menu.dart';
 
@@ -15,6 +16,8 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    LocalNotificationService.initilize(context);
+
     return Scaffold(
         body: Form(
       key: _formKey,
@@ -57,8 +60,12 @@ class _LoginFormState extends State<LoginForm> {
               };
               var answer = (await ApiService().Login(body));
               if (answer == true) {
-                Navigator.push((context),
-                    MaterialPageRoute(builder: (context) => HomePage()));
+                Navigator.push(
+                    (context),
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              selectedIndex: 0,
+                            )));
               } else {
                 _showSnackbar(context, 'Failed to login');
               }

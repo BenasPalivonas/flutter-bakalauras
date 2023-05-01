@@ -10,20 +10,22 @@ import 'lectures.dart';
 import 'assignments.dart';
 import 'package:get/get.dart';
 
-import 'notifications.dart';
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Side Menu',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(),
+      home: HomePage(selectedIndex: 0),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  final int selectedIndex;
+
+  const HomePage({Key? key, required this.selectedIndex}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -43,6 +45,13 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() => {_selectedIndex = widget.selectedIndex});
   }
 
   @override

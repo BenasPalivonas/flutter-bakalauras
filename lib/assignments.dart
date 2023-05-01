@@ -129,51 +129,6 @@ class _TodoListState extends State<ClickableList> {
     }
   }
 
-  void _showDetails(Assignment item) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(item.subject.name),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('${translate('modal.name')} ${item.name}'),
-              SizedBox(height: 8),
-              Text('${translate('modal.subject')} ${item.subject.name}'),
-              SizedBox(height: item.lecturer == null ? 0 : 8),
-              item.lecturer == null
-                  ? Text('')
-                  : Text(
-                      '${translate('modal.lecturer')} ${item.lecturer?.name}'),
-              SizedBox(height: item.venue == null ? 0 : 8),
-              item.venue == null
-                  ? Text('')
-                  : Text(
-                      "${translate('subtitles.venue')}: ${item.venue?.name}"),
-              SizedBox(height: 8),
-              Text(
-                  '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
-              SizedBox(height: 16),
-              Text('${translate('modal.additional_details')}',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text(item.details),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -212,7 +167,7 @@ class _TodoListState extends State<ClickableList> {
                               '${item.subject.name} - ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
                           textColor: Colors.black,
                           onTap: () {
-                            _showDetails(item);
+                            showDetails(context, item);
                           },
                         );
                       }).toList(),
@@ -273,5 +228,48 @@ void _showSnackbar(BuildContext context, String message) {
       content: Text(message),
       duration: Duration(seconds: 2),
     ),
+  );
+}
+
+void showDetails(BuildContext context, Assignment item) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(item.subject.name),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${translate('modal.name')} ${item.name}'),
+            SizedBox(height: 8),
+            Text('${translate('modal.subject')} ${item.subject.name}'),
+            SizedBox(height: item.lecturer == null ? 0 : 8),
+            item.lecturer == null
+                ? Text('')
+                : Text('${translate('modal.lecturer')} ${item.lecturer?.name}'),
+            SizedBox(height: item.venue == null ? 0 : 8),
+            item.venue == null
+                ? Text('')
+                : Text("${translate('subtitles.venue')}: ${item.venue?.name}"),
+            SizedBox(height: 8),
+            Text(
+                '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
+            SizedBox(height: 16),
+            Text('${translate('modal.additional_details')}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(item.details),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
   );
 }

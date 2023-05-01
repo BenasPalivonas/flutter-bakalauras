@@ -1,17 +1,39 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ui/services/api_service.dart';
+
+import '../assignments.dart';
+import '../main.dart';
+import '../menu.dart';
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static void initilize() {
+  static void initilize(BuildContext? context) {
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher"));
     _notificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) {
-      print(payload);
+        onSelectNotification: (String? payload) async {
+      if (context != null) {
+        Assignment? assignment = null;
+        if (USER_GROUP.isNotEmpty) {
+          try {
+            assignment = (await ApiService().getAssignment(payload!))!;
+            Navigator.push(
+                (context),
+                MaterialPageRoute(
+                    builder: (context) => HomePage(
+                          selectedIndex: 1,
+                        )));
+            showDetails(context, assignment!);
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
     });
   }
 
@@ -39,6 +61,6 @@ class LocalNotificationService {
         message.notification!.title,
         message.notification!.body,
         notificationDetail,
-        payload: message.data["message"]);
+        payload: message.data["id"]);
   }
 }

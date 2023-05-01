@@ -25,7 +25,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  LocalNotificationService.initilize();
+  LocalNotificationService.initilize(null);
+
   getRegistrationId();
   FirebaseMessaging.onMessage.listen((message) async {
     Assignment? assignment = null;
@@ -46,6 +47,7 @@ void main() async {
       LocalNotificationService.showNotificationOnForeground(message);
       print('sent');
     } catch (e) {
+      print('not sent');
       print('Error parsing JSON: $e');
     }
   });
@@ -61,7 +63,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var localizationDelegate = LocalizedApp.of(context).delegate;
-
     return LocalizationProvider(
       state: LocalizationProvider.of(context).state,
       child: MaterialApp(

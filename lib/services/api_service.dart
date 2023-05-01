@@ -311,8 +311,6 @@ class Assignment {
   final Lecturer? lecturer;
   final List<dynamic> studentGroups;
 
-  // final String? student_id;
-
   Assignment({
     this.id,
     required this.name,
@@ -322,15 +320,12 @@ class Assignment {
     this.lecturer,
     this.venue,
     required this.studentGroups,
-
-    // this.student_id,
     required this.completed,
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'subject_id': subject.id,
-        // 'student_id': student_id,
         'due_date': date.toIso8601String(),
         'details': details,
         'completed': completed,
