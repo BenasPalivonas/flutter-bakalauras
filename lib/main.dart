@@ -30,6 +30,7 @@ void main() async {
   getRegistrationId();
   FirebaseMessaging.onMessage.listen((message) async {
     Assignment? assignment = null;
+    inspect(message.data);
     if (USER_GROUP.isNotEmpty) {
       try {
         String id = message.data['id'];

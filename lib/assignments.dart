@@ -236,6 +236,7 @@ void _showSnackbar(BuildContext context, String message) {
 }
 
 void showDetails(BuildContext context, Assignment item) {
+  inspect(item);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -259,6 +260,9 @@ void showDetails(BuildContext context, Assignment item) {
             SizedBox(height: 8),
             Text(
                 '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
+            SizedBox(height: 8),
+            Text(
+                'Grade: ${item.grades.length > 0 ? item.grades.firstWhere((grade) => grade != null ? grade.student.username.toString() == USER_NUMBER : false)?.grade ?? 'N/A' : 'N/A'}'),
             SizedBox(height: 16),
             Text('${translate('modal.additional_details')}',
                 style: TextStyle(fontWeight: FontWeight.bold)),

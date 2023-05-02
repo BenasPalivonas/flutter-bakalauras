@@ -302,13 +302,15 @@ class Student {
 class Grade {
   final String id;
   final Student student;
+  final String grade;
 
-  Grade({required this.id, required this.student});
+  Grade({required this.id, required this.student, required this.grade});
 
   factory Grade.fromJson(Map<String, dynamic> json) {
     return Grade(
       id: json['id'].toString(),
       student: Student.fromJson(json['student']),
+      grade: json['grade'].toString(),
     );
   }
 }
