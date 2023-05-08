@@ -11,12 +11,14 @@ import 'assignments.dart';
 import 'package:get/get.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Side Menu',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(selectedIndex: 0),
+      home: const HomePage(selectedIndex: 0),
     );
   }
 }
@@ -33,12 +35,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  List<Widget> _widgetOptions = <Widget>[
-    LecturePage(),
-    MyListScreen(),
-    Calendar(),
-    ContactList(),
-    SettingsPage(),
+  final List<Widget> _widgetOptions = <Widget>[
+    const LecturePage(),
+    const MyListScreen(),
+    const Calendar(),
+    const ContactList(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -126,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginForm()),
+                  MaterialPageRoute(builder: (context) => const LoginForm()),
                 );
               },
             ),

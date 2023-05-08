@@ -6,6 +6,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:ui/services/api_service.dart';
 
 class ContactList extends StatefulWidget {
+  const ContactList({super.key});
+
   @override
   _ContactListState createState() => _ContactListState();
 }

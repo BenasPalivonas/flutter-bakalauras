@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key, this.title}) : super(key: key);
+  const SettingsPage({Key? key, this.title}) : super(key: key);
   final String? title;
 
   @override
@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'language.name.${localizationDelegate.currentLocale.languageCode}')
             })),
             Padding(
-                padding: EdgeInsets.only(top: 25, bottom: 160),
+                padding: const EdgeInsets.only(top: 25, bottom: 160),
                 child: CupertinoButton.filled(
                   child: Text(translate('button.change_language')),
                   padding: const EdgeInsets.symmetric(

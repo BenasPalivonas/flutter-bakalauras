@@ -11,7 +11,7 @@ import 'package:ui/services/api_service.dart';
 class MyListItem extends StatelessWidget {
   final Assignment item;
 
-  MyListItem({required this.item});
+  const MyListItem({required this.item, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,8 @@ class MyListItem extends StatelessWidget {
 }
 
 class Calendar extends StatefulWidget {
+  const Calendar({super.key});
+
   @override
   CalendarState createState() => CalendarState();
 }

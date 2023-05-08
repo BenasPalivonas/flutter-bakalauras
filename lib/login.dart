@@ -5,6 +5,8 @@ import 'package:ui/services/local_notifications.dart';
 import 'menu.dart';
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }

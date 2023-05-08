@@ -51,7 +51,7 @@ void main() async {
       print('Error parsing JSON: $e');
     }
   });
-  runApp(LocalizedApp(delegate, MyApp()));
+  runApp(LocalizedApp(delegate, const MyApp()));
 }
 
 void getRegistrationId() async {
@@ -60,6 +60,8 @@ void getRegistrationId() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     var localizationDelegate = LocalizedApp.of(context).delegate;
@@ -75,7 +77,7 @@ class MyApp extends StatelessWidget {
         supportedLocales: localizationDelegate.supportedLocales,
         locale: localizationDelegate.currentLocale,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: LoginForm(),
+        home: const LoginForm(),
       ),
     );
   }
