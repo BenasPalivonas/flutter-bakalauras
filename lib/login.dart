@@ -26,7 +26,7 @@ class _LoginFormState extends State<LoginForm> {
         children: <Widget>[
           TextFormField(
             controller: _usernameController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Username',
               icon: Icon(Icons.person),
             ),
@@ -39,7 +39,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           TextFormField(
             controller: _passwordController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Password',
               icon: Icon(Icons.lock),
             ),
@@ -63,14 +63,14 @@ class _LoginFormState extends State<LoginForm> {
                 Navigator.push(
                     (context),
                     MaterialPageRoute(
-                        builder: (context) => HomePage(
+                        builder: (context) => const HomePage(
                               selectedIndex: 0,
                             )));
               } else {
                 _showSnackbar(context, 'Failed to login');
               }
             },
-            child: Text('Login'),
+            child: const Text('Login'),
           ),
         ],
       ),
@@ -82,7 +82,7 @@ void _showSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     ),
   );
 }

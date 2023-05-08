@@ -101,7 +101,7 @@ Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
 
   // build list view with section headers for each day
   return isLoading
-      ? Scaffold(
+      ? const Scaffold(
           body: Center(
             child: CircularProgressIndicator(),
           ),
@@ -117,10 +117,10 @@ Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
               children: [
                 // section header with day of week name
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Text(
                     translate("weekDay.${dayOfWeek}"),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -129,12 +129,12 @@ Widget _buildLectureList(List<Lecture> lectures, bool isLoading) {
                 // list of lectures for the day
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: dayLectures.length,
                   itemBuilder: (context, index) {
                     Lecture lecture = dayLectures[index];
                     return ListTile(
-                      title: Text("${lecture.subject.name.tr}"),
+                      title: Text("${translate(lecture.subject.name)}"),
                       trailing: Text(lecture.time),
                       subtitle: Text(
                           "${translate('subtitles.venue')}: ${lecture.venue.name} - ${translate('subtitles.lecturer')}: ${lecture.lecturer?.name}"),

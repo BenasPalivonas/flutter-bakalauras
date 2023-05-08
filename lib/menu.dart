@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
+              leading: const Icon(Icons.home),
               title: Text(translate('tabs.lectures')),
               selected: _selectedIndex == 0,
               onTap: () {
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.message),
+              leading: const Icon(Icons.message),
               title: Text(translate('tabs.assignments')),
               selected: _selectedIndex == 1,
               onTap: () {
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.message),
+              leading: const Icon(Icons.message),
               title: Text(translate('tabs.calendar')),
               selected: _selectedIndex == 2,
               onTap: () {
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.contact_mail),
+              leading: const Icon(Icons.contact_mail),
               title: Text(translate('tabs.contacts')),
               selected: _selectedIndex == 3,
               onTap: () {
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
+              leading: const Icon(Icons.settings),
               title: Text(translate('tabs.settings')),
               selected: _selectedIndex == 4,
               onTap: () {
@@ -119,9 +119,9 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.logout),
+              leading: const Icon(Icons.logout),
               title: Text(translate('tabs.logout')),
               onTap: () {
                 Navigator.push(

@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:ui/services/api_service.dart';
 
 class MyListScreen extends StatefulWidget {
+  const MyListScreen({Key? key}) : super(key: key);
+
   @override
   _MyListScreenState createState() => _MyListScreenState();
 }
@@ -50,7 +52,7 @@ class _MyListScreenState extends State<MyListScreen> {
               indicatorColor: Colors.blue,
               labelColor: Colors.blue,
             ),
-            Expanded(
+            const Expanded(
               child: TabBarView(
                 children: [
                   ClickableList(
@@ -141,19 +143,19 @@ class _TodoListState extends State<ClickableList> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Scaffold(
+        ? const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
           )
         : Scaffold(
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: translate('contacts.search_lecturers'),
@@ -207,7 +209,7 @@ Future<String> _openSubjectSelector(
               backgroundColor: _filteredBy.isEmpty ? Colors.blue : Colors.green,
               automaticallyImplyLeading: false),
           body: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.0),
+              padding: const EdgeInsets.symmetric(vertical: 2.0),
               child: (ListView.builder(
                 itemCount: subjects.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -230,7 +232,7 @@ void _showSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     ),
   );
 }
@@ -247,31 +249,32 @@ void showDetails(BuildContext context, Assignment item) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('${translate('modal.name')} ${item.name}'),
-            SizedBox(height: 8),
-            Text('${translate('modal.subject')} ${item.subject.name}'),
+            const SizedBox(height: 8),
+            Text(
+                '${translate('modal.subject')} ${translate(item.subject.name)}'),
             SizedBox(height: item.lecturer == null ? 0 : 8),
             item.lecturer == null
-                ? Text('')
+                ? const Text('')
                 : Text('${translate('modal.lecturer')} ${item.lecturer?.name}'),
             SizedBox(height: item.venue == null ? 0 : 8),
             item.venue == null
-                ? Text('')
+                ? const Text('')
                 : Text("${translate('subtitles.venue')}: ${item.venue?.name}"),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
                 '${translate('modal.date')} ${DateFormat('yyyy-MM-dd HH:mm').format(item.date)}'),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-                'Grade: ${item.grades.length > 0 ? item.grades.firstWhere((grade) => grade != null ? grade.student.username.toString() == USER_NUMBER : false)?.grade ?? 'N/A' : 'N/A'}'),
-            SizedBox(height: 16),
+                '${translate('modal.grade')} ${item.grades.length > 0 ? item.grades.firstWhere((grade) => grade != null ? grade.student.username.toString() == USER_NUMBER : false)?.grade ?? 'N/A' : 'N/A'}'),
+            const SizedBox(height: 16),
             Text('${translate('modal.additional_details')}',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(item.details),
           ],
         ),
         actions: [
           TextButton(
-            child: Text('Close'),
+            child: const Text('Close'),
             onPressed: () {
               Navigator.of(context).pop();
             },

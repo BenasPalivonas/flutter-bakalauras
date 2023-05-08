@@ -59,7 +59,8 @@
         "subject": "Subject:",
         "date": "Date:",
         "additional_details": "Additional Details:",
-        "lecturer": "Lecturer:"
+        "lecturer": "Lecturer:",
+        "grade": "Grade:"
     },
     "dropdown": {
         "name": "Name:",

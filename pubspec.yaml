@@ -40,7 +40,7 @@ dependencies:
   get: ^4.6.5
   flutter_translate: ^4.0.3
   flutter_localization: ^0.1.10
-  firebase_messaging: ^14.4.0
+  firebase_messaging: ^14.5.0
   firebase_core: ^2.9.0
   http: ^0.13.4
 

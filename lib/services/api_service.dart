@@ -210,7 +210,7 @@ class Lecture {
   final String time;
   final Venue venue;
   final Lecturer? lecturer;
-  final List<StudentGroup> studentGroups;
+  final List<dynamic> studentGroups;
   final Weekday weekday;
 
   Lecture({
@@ -373,25 +373,25 @@ class Assignment {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('${translate('modal.name')} ${name}'),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text('${translate('modal.subject')} ${subject.name}'),
               SizedBox(height: lecturer == null ? 0 : 8),
               lecturer == null
-                  ? Text('')
+                  ? const Text('')
                   : Text('${translate('modal.lecturer')} ${lecturer?.name}'),
               SizedBox(height: venue == null ? 0 : 8),
               venue == null
-                  ? Text('')
+                  ? const Text('')
                   : Text("${translate('subtitles.venue')}: ${venue?.name}"),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text('${translate('modal.additional_details')} ',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               Text(details),
             ],
           ),
           actions: [
             TextButton(
-              child: Text('Close'),
+              child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

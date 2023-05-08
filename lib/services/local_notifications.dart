@@ -13,8 +13,9 @@ class LocalNotificationService {
 
   static void initilize(BuildContext? context) {
     final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: AndroidInitializationSettings("@mipmap/ic_launcher"));
+        const InitializationSettings(
+            android:
+                const AndroidInitializationSettings("@mipmap/ic_launcher"));
     _notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? payload) async {
       if (context != null) {
@@ -25,7 +26,7 @@ class LocalNotificationService {
             Navigator.push(
                 (context),
                 MaterialPageRoute(
-                    builder: (context) => HomePage(
+                    builder: (context) => const HomePage(
                           selectedIndex: 1,
                         )));
             showDetails(context, assignment!);
@@ -45,10 +46,10 @@ class LocalNotificationService {
         importance: Importance.max,
         priority: Priority.high,
         icon: '@mipmap/ic_launcher', // Set the small icon for the notification
-        largeIcon: DrawableResourceAndroidBitmap(
+        largeIcon: const DrawableResourceAndroidBitmap(
             '@mipmap/ic_launcher'), // Set the large icon for the notification
         styleInformation: BigPictureStyleInformation(
-          DrawableResourceAndroidBitmap(
+          const DrawableResourceAndroidBitmap(
               '@mipmap/ic_launcher'), // The image to display
           contentTitle: message.notification!.title,
           summaryText: message.notification!.body,

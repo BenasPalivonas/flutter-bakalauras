@@ -59,7 +59,8 @@
         "subject": "Dalykas:",
         "date": "Data:",
         "additional_details": "Papildoma informacija:",
-        "lecturer": "Dėstytojas:"
+        "lecturer": "Dėstytojas:",
+        "grade": "Pažymis:"
     },
     "dropdown": {
         "name": "Pavadinimas:",
