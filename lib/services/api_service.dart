@@ -13,7 +13,7 @@ String USER_ID = '';
 
 class ApiService {
   Map<String, String> headers = {
-    'Content-Type': 'application/json; charset=UTF-8',
+    'Content-Type': 'application/json; charset=utf-8',
   };
 
   Future<List<Lecturer>?> getLecturers() async {
@@ -21,7 +21,8 @@ class ApiService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.lecturers);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data = json.decode(Utf8Decoder().convert(response.bodyBytes))
+            as List<dynamic>;
         return data.map((item) => Lecturer.fromJson(item)).toList();
       }
     } catch (e) {
@@ -31,11 +32,15 @@ class ApiService {
   }
 
   Future<List<Lecture>?> getLectures() async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+    };
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.lectures);
-      var response = await http.get(url);
+      var response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data = json.decode(Utf8Decoder().convert(response.bodyBytes))
+            as List<dynamic>;
         return data.map((item) => Lecture.fromJson(item)).toList();
       }
     } catch (e) {
@@ -49,7 +54,8 @@ class ApiService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.subjects);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data = json.decode(Utf8Decoder().convert(response.bodyBytes))
+            as List<dynamic>;
         return data.map((item) => Subject.fromJson(item)).toList();
       }
     } catch (e) {
@@ -63,7 +69,8 @@ class ApiService {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as List<dynamic>;
+        var data = json.decode(Utf8Decoder().convert(response.bodyBytes))
+            as List<dynamic>;
         return data.map((item) => Assignment.fromJson(item)).toList();
       }
     } catch (e) {
@@ -78,7 +85,8 @@ class ApiService {
           Uri.parse(ApiConstants.baseUrl + ApiConstants.assignments + id + "/");
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body) as dynamic;
+        var data =
+            json.decode(Utf8Decoder().convert(response.bodyBytes)) as dynamic;
         return Assignment.fromJson(data);
       }
     } catch (e) {
